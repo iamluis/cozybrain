@@ -27,7 +27,7 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 
 | #    | Slug                       | Status        |
 |------|----------------------------|---------------|
-| 0001 | bootstrap-rails-app        | 🔴 not started |
+| 0001 | bootstrap-rails-app        | 🟢 done        |
 | 0002 | domain-models              | 🔴 not started |
 | 0003 | capture-flow               | 🔴 not started |
 | 0004 | holded-integration         | 🔴 not started |

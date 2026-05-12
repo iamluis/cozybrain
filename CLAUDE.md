@@ -15,7 +15,7 @@ The DHH "majestic monolith / no-build / one-person framework" stack, latest stab
 - **Ruby 4.0.x**, **Rails 8.1.x** — no exceptions, no version drift.
 - **SQLite** for development *and* production. (DHH/37signals validated; Solid adapters make this real.)
 - **Solid Trifecta**: Solid Queue (jobs), Solid Cache (cache), Solid Cable (websockets) — all DB-backed. No Redis.
-- **Asset pipeline**: Propshaft. **JS**: importmap-rails (no bundling, no transpilation). **CSS**: plain CSS via Propshaft. **NO Node, NO esbuild, NO Webpack, NO build step.**
+- **Asset pipeline**: Propshaft. **JS**: importmap-rails (no bundling, no transpilation). **CSS**: Tailwind via `tailwindcss-rails` (standalone binary — still no Node). **NO Node, NO esbuild, NO Webpack, NO npm.**
 - **Frontend interactivity**: Hotwire — Turbo + Stimulus. Server-rendered ERB. No SPA, no React, no Vue.
 - **Auth**: Rails 8 built-in `bin/rails generate authentication`. No Devise.
 - **Background jobs**: Active Job → Solid Queue. Use Rails 8.1 **Active Job Continuations** for any job >30s.
