@@ -1,0 +1,39 @@
+<% content_for :title, "Saved" %>
+
+<div class="min-h-screen bg-stone-50 text-stone-900">
+  <div class="mx-auto max-w-md px-5 pt-12">
+    <div class="flex items-center gap-2 text-emerald-700">
+      <span aria-hidden="true">✓</span>
+      <span class="text-sm font-medium">Saved</span>
+    </div>
+
+    <div class="mt-6 rounded-xl border border-stone-200 bg-white px-5 py-6 space-y-3">
+      <div class="text-4xl font-light">
+        €<%= number_with_precision(@receipt.amount_cents / 100.0, precision: 2) %>
+      </div>
+      <div class="text-stone-700">
+        <%= @receipt.vendor.presence || tag.span("(no vendor)", class: "text-stone-400") %>
+      </div>
+      <div class="text-sm text-stone-500">
+        <%= l(@receipt.paid_on, format: :long) %>
+        <% if @receipt.country.present? %>
+          · <%= @receipt.country %>
+        <% end %>
+      </div>
+      <% if @receipt.filing.note.present? %>
+        <div class="text-sm text-stone-600 italic">
+          “<%= @receipt.filing.note %>”
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8 grid grid-cols-2 gap-3">
+      <%= link_to "Add another",
+            new_receipt_path,
+            class: "rounded-lg bg-stone-900 text-white text-base font-medium py-4 text-center" %>
+      <%= link_to "Done",
+            root_path,
+            class: "rounded-lg border border-stone-300 bg-white text-stone-900 text-base font-medium py-4 text-center" %>
+    </div>
+  </div>
+</div>
