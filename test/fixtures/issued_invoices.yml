@@ -1,0 +1,18 @@
+lab900_april:
+  client_name: Lab900
+  number: "2026-0004"
+  issued_on: 2026-05-01
+  amount_cents: 800000
+  currency: EUR
+  period_year: 2026
+  period_month: 4
+  invoice_status: sent
+
+lab900_may_draft:
+  client_name: Lab900
+  number: "2026-0005"
+  amount_cents: 850000
+  currency: EUR
+  period_year: 2026
+  period_month: 5
+  invoice_status: draft

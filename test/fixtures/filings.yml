@@ -1,0 +1,74 @@
+lab900_dinner_filing:
+  filable: lab900_dinner (Receipt)
+  user: luis
+  folder: expenses
+  period_year: 2026
+  period_month: 5
+  status: filed
+  source: capture
+  received_at: 2026-05-08 21:32:00
+  filed_at: 2026-05-08 21:32:05
+
+parking_meter_filing:
+  filable: parking_meter (Receipt)
+  user: luis
+  folder: expenses
+  period_year: 2026
+  period_month: 5
+  status: pending
+  source: capture
+  received_at: 2026-05-09 14:10:00
+
+ryanair_filing:
+  filable: ryanair_invoice (ReceivedDocument)
+  user: luis
+  folder: expenses
+  period_year: 2026
+  period_month: 5
+  status: filed
+  source: email
+  received_at: 2026-05-02 08:15:00
+  filed_at: 2026-05-02 08:15:30
+
+santander_filing:
+  filable: santander_statement (ReceivedDocument)
+  user: luis
+  folder: bank
+  period_year: 2026
+  period_month: 5
+  status: filed
+  source: email
+  received_at: 2026-05-01 06:00:00
+  filed_at: 2026-05-01 06:00:30
+
+modelo_303_filing:
+  filable: modelo_303_q1 (ReceivedDocument)
+  user: luis
+  folder: tax
+  period_year: 2026
+  period_quarter: 1
+  status: needs_review
+  source: email
+  received_at: 2026-04-20 11:00:00
+
+lab900_april_filing:
+  filable: lab900_april (IssuedInvoice)
+  user: luis
+  folder: issued
+  period_year: 2026
+  period_month: 4
+  status: filed
+  source: manual
+  received_at: 2026-05-01 09:00:00
+  filed_at: 2026-05-01 09:01:00
+  holded_ref: hld_inv_apr_2026
+
+lab900_may_draft_filing:
+  filable: lab900_may_draft (IssuedInvoice)
+  user: luis
+  folder: issued
+  period_year: 2026
+  period_month: 5
+  status: pending
+  source: manual
+  received_at: 2026-05-12 09:00:00

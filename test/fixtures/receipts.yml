@@ -1,0 +1,13 @@
+lab900_dinner:
+  vendor: Le Pain Quotidien
+  amount_cents: 2350
+  currency: EUR
+  paid_on: 2026-05-08
+  country: BE
+
+parking_meter:
+  vendor: Parking Madrid Centro
+  amount_cents: 450
+  currency: EUR
+  paid_on: 2026-05-09
+  country: ES

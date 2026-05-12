@@ -1,0 +1,14 @@
+ryanair_invoice:
+  kind: email_invoice
+  sender: receipts@ryanair.com
+  subject: Your Ryanair invoice FR4521-2026
+
+santander_statement:
+  kind: bank_statement
+  sender: noreply@santander.es
+  subject: Cuenta empresa - Mayo 2026
+
+modelo_303_q1:
+  kind: tax_doc
+  sender: gestoria@example.com
+  subject: Modelo 303 Q1 2026

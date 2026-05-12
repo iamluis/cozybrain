@@ -1,0 +1,13 @@
+april_consulting:
+  issued_invoice: lab900_april
+  position: 1
+  description: Consulting services - April 2026
+  quantity: 160.0
+  unit_amount_cents: 5000
+
+may_consulting_draft:
+  issued_invoice: lab900_may_draft
+  position: 1
+  description: Consulting services - May 2026
+  quantity: 170.0
+  unit_amount_cents: 5000

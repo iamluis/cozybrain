@@ -1,0 +1,28 @@
+dinner_charge:
+  posted_on: 2026-05-08
+  amount_cents: -2350
+  currency: EUR
+  description: LE PAIN QUOTIDIEN BRUSSELS
+  holded_ref: hld_tx_001
+  matched_filing: lab900_dinner_filing
+
+parking_charge:
+  posted_on: 2026-05-09
+  amount_cents: -450
+  currency: EUR
+  description: APARCAMIENTO CENTRO MADRID
+  holded_ref: hld_tx_002
+
+mystery_charge:
+  posted_on: 2026-05-11
+  amount_cents: -1800
+  currency: EUR
+  description: AMAZON PRIME EU
+  holded_ref: hld_tx_003
+
+lab900_payment:
+  posted_on: 2026-05-05
+  amount_cents: 800000
+  currency: EUR
+  description: TRANSFER FROM LAB900 NV
+  holded_ref: hld_tx_004
