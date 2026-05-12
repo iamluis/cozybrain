@@ -1,0 +1,60 @@
+<% content_for :title, "Invoice #{@invoice.number}" %>
+
+<div class="invoice-page">
+  <div class="invoice">
+    <header class="invoice__head">
+      <div>
+        <div class="invoice__title">Invoice</div>
+        <div class="invoice__sub">
+          #<%= @invoice.number %> · <%= @invoice.period_label %>
+        </div>
+      </div>
+      <% if @invoice.invoice_draft? %>
+        <span class="entry__pill">draft</span>
+      <% elsif @invoice.invoice_approved? %>
+        <span class="entry__pill entry__pill--sending">sending</span>
+      <% else %>
+        <span class="entry__pill entry__pill--sent"><%= @invoice.invoice_status %></span>
+      <% end %>
+    </header>
+
+    <section class="invoice__parties">
+      <div>
+        <div class="invoice__party-label">From</div>
+        <div class="invoice__party-name">Sotelo y Sotelo SLU</div>
+        <div class="invoice__party-meta">Madrid · Spain</div>
+      </div>
+      <div>
+        <div class="invoice__party-label">To</div>
+        <div class="invoice__party-name"><%= @invoice.client_name %></div>
+      </div>
+    </section>
+
+    <% if @invoice.invoice_draft? %>
+      <%= form_with model: @invoice, url: invoice_path(@invoice), method: :patch, class: "invoice__form" do |f| %>
+        <%= render "lines_editable", f: f, invoice: @invoice %>
+
+        <div class="invoice__save">
+          <%= f.submit "Save changes", class: "button" %>
+        </div>
+      <% end %>
+
+      <footer class="invoice__actions">
+        <%= button_to "Send to #{@invoice.client_name}",
+              send_to_client_invoice_path(@invoice),
+              method: :post,
+              class: "button button--primary",
+              form: { class: "invoice__send-form" } %>
+      </footer>
+    <% else %>
+      <%= render "lines_readonly", invoice: @invoice %>
+
+      <% if @invoice.verifactu_ref.present? %>
+        <footer class="invoice__footer-meta">
+          <% if @invoice.issued_on %>Issued <%= l(@invoice.issued_on, format: :long) %> · <% end %>
+          VeriFactu <%= @invoice.verifactu_ref %>
+        </footer>
+      <% end %>
+    <% end %>
+  </div>
+</div>

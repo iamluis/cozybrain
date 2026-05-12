@@ -2,10 +2,48 @@
 
 <div class="page stack">
   <h1>Invoices</h1>
-  <p class="card__meta">
-    <%= pluralize(@invoices.size, "invoice") %> on file.
-  </p>
-  <p class="card__meta">
-    The full invoice list and the monthly draft flow arrive in milestone 0009.
-  </p>
+
+  <% if @draft.present? %>
+    <%= link_to invoice_path(@draft), class: "invoice-card invoice-card--draft" do %>
+      <div class="invoice-card__row">
+        <span class="invoice-card__label">Draft for</span>
+        <span class="invoice-card__period"><%= @draft.period_label %></span>
+      </div>
+      <div class="invoice-card__client">
+        <%= @draft.client_name %>
+      </div>
+      <div class="invoice-card__total">
+        €<%= number_with_precision(@draft.computed_total_cents / 100.0, precision: 2, delimiter: "," ) %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= button_to "Start the next invoice",
+          invoices_path,
+          method: :post,
+          params: { period_year: @next_period.first, period_month: @next_period.last },
+          form: { class: "invoice-start-form" },
+          class: "button button--primary" %>
+  <% end %>
+
+  <% if @historical.any? %>
+    <section class="invoice-history">
+      <h2 class="invoice-history__label">Earlier</h2>
+      <ul class="invoice-history__list">
+        <% @historical.each do |invoice| %>
+          <li class="invoice-history__item">
+            <%= link_to invoice_path(invoice), class: "invoice-history__link" do %>
+              <span class="invoice-history__period"><%= invoice.period_label %></span>
+              <span class="invoice-history__client"><%= invoice.client_name %></span>
+              <span class="invoice-history__amount">
+                €<%= number_with_precision(invoice.amount_cents / 100.0, precision: 2, delimiter: ",") %>
+              </span>
+              <span class="invoice-history__status entry__pill entry__pill--<%= invoice.invoice_status %>">
+                <%= invoice.invoice_status %>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 </div>

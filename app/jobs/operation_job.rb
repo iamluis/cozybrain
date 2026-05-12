@@ -15,5 +15,19 @@ class OperationJob < ApplicationJob
   def perform(operation_id)
     operation = Operation.find(operation_id)
     Runtime::Dispatcher.call(operation)
+    apply_outcome(operation) if operation.terminal?
+  end
+
+  private
+
+  # Per-kind side effects on terminal completion. Kept inline for now;
+  # promote to a Handler registry once more than two kinds need it.
+  def apply_outcome(operation)
+    case operation.kind
+    when "issue_invoice"
+      ApplyIssueInvoiceOutcome.call(operation)
+    when "send_notification"
+      # nothing to apply — notifications are fire-and-forget
+    end
   end
 end

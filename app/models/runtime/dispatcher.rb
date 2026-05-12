@@ -17,9 +17,9 @@ module Runtime
   module Dispatcher
     KIND_TO_PORT = {
       "certify_receipt"          => Port::ReceiptCertifier,
-      "send_notification"        => Port::Notifier
+      "send_notification"        => Port::Notifier,
+      "issue_invoice"            => Port::InvoiceIssuer
       # Future kinds bind their ports as those milestones ship:
-      #   "issue_invoice"            => Port::InvoiceIssuer        (0008)
       #   "deliver_inbound_document" => Port::InboundDocumentReceiver (0009)
       #   "sync_folder"              => Port::FolderSync           (0010)
       #   "sync_bank_transactions"   => Port::BankSync             (0013)
@@ -50,6 +50,15 @@ module Runtime
 
     def reset_bindings!
       @mutex.synchronize { @bindings = {} }
+    end
+
+    # Single source of truth for the default port → adapter wiring. Called
+    # from the runtime_bindings initializer at boot, and from test teardown
+    # to restore production-shaped bindings after isolation hacking.
+    def bind_defaults!
+      bind(port: Port::ReceiptCertifier, adapter: Adapter::Null::ReceiptCertifier)
+      bind(port: Port::Notifier,         adapter: Adapter::Null::Notifier)
+      bind(port: Port::InvoiceIssuer,    adapter: Adapter::Null::InvoiceIssuer)
     end
 
     def call(operation)

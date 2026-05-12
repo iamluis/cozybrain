@@ -1,0 +1,40 @@
+<table class="invoice__lines">
+  <thead>
+    <tr>
+      <th class="invoice__col-desc">Description</th>
+      <th class="invoice__col-qty">Quantity</th>
+      <th class="invoice__col-rate">Rate</th>
+      <th class="invoice__col-amt">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= f.fields_for :line_items do |lf| %>
+      <% line = lf.object %>
+      <tr class="invoice__line">
+        <td>
+          <%= lf.hidden_field :id %>
+          <%= lf.hidden_field :position %>
+          <%= lf.text_field :description, class: "invoice__input invoice__input--desc" %>
+        </td>
+        <td>
+          <%= lf.number_field :quantity, step: 0.01, class: "invoice__input invoice__input--qty" %>
+        </td>
+        <td>
+          <%= lf.number_field :unit_amount_cents, class: "invoice__input invoice__input--rate" %>
+          <span class="invoice__cents-hint">cents</span>
+        </td>
+        <td class="invoice__line-amount">
+          €<%= number_with_precision(line.total_cents / 100.0, precision: 2, delimiter: ",") %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" class="invoice__total-label">Total</td>
+      <td class="invoice__total-amount">
+        €<%= number_with_precision(invoice.computed_total_cents / 100.0, precision: 2, delimiter: ",") %>
+      </td>
+    </tr>
+  </tfoot>
+</table>

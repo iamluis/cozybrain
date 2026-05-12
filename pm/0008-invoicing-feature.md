@@ -35,4 +35,20 @@ If a UX choice serves the work (Luis getting to "sent" without thinking), keep i
 - Multi-client support beyond Lab900 (already accepted in brain.md).
 - Time-tracking / hour entry (brain.md §what-the-system-is-not).
 
-## Detail at milestone start.
+## Result
+
+- `Port::InvoiceIssuer` + `Adapter::Null::InvoiceIssuer` shipped; Dispatcher KIND_TO_PORT extended.
+- `Runtime::Dispatcher.bind_defaults!` centralizes wiring — single source of truth for both runtime + test teardown.
+- `IssuedInvoice` gained `accepts_nested_attributes_for :line_items`, `computed_total_cents`, `recompute_total!`, `period_label`, `next_number_for(year:)`, `draft_next(user:, period_year:, period_month:)`.
+- New routes: `GET /invoices`, `POST /invoices`, `GET /invoices/:id`, `PATCH /invoices/:id`, `POST /invoices/:id/send_to_client`.
+- `InvoicesController`: index lists draft prominently + history; show renders editable form for drafts, read-only document for sent; update saves and recomputes total; send_to_client creates Operation + transitions to `approved`.
+- `ApplyIssueInvoiceOutcome`: post-dispatch handler. On success: invoice → `sent`, filing → `filed`, refs copied. On abort: invoice → `draft`, filing → `needs_review`.
+- `OperationJob` extended with `apply_outcome(operation)` switch per kind.
+- Views: invoice rendered as a document (parties, lines table, total), inputs blend into the document.
+- 120 tests / 413 assertions / bin/ci green.
+
+## Outstanding
+
+- Auto-save on blur (no JS for now; one explicit Save button).
+- Recurring "draft the next invoice" job (scheduled in 0011 alongside weekly pulse infrastructure).
+- Per-line add/remove UI (Save edits current rows in place; new rows / deletions deferred until a real need).

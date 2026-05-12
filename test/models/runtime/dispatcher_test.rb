@@ -47,10 +47,8 @@ class Runtime::DispatcherTest < ActiveSupport::TestCase
   end
 
   teardown do
-    # Restore production bindings the initializer set up
     Runtime::Dispatcher.reset_bindings!
-    Runtime::Dispatcher.bind(port: Port::ReceiptCertifier, adapter: Adapter::Null::ReceiptCertifier)
-    Runtime::Dispatcher.bind(port: Port::Notifier,         adapter: Adapter::Null::Notifier)
+    Runtime::Dispatcher.bind_defaults!
   end
 
   test "happy path: pending → running → succeeded, output recorded" do
