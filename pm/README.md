@@ -30,7 +30,7 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0001 | bootstrap-rails-app        | 🟢 done        |
 | 0002 | domain-models              | 🟢 done        |
 | 0003 | capture-flow               | 🟢 done        |
-| 0004 | landing-page               | 🔴 not started |
+| 0004 | landing-page               | 🟢 done        |
 | 0005 | navigation                 | 🔴 not started |
 | 0006 | holded-integration         | 🔴 not started |
 | 0007 | email-ingestion            | 🔴 not started |

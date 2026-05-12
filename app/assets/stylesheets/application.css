@@ -233,3 +233,33 @@ button { font: inherit; cursor: pointer; }
 }
 .auth-page h1 { margin-bottom: 1.5rem; }
 .auth-page .meta { font-size: 0.875rem; color: var(--muted); margin-top: 1rem; }
+
+/* Landing */
+.landing {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+}
+.landing__inner {
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.landing__brand {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.landing__tagline {
+  font-size: 1.125rem;
+  color: var(--ink);
+}
+.landing__scope {
+  color: var(--muted);
+  max-width: 28rem;
+}
+.landing__cta {
+  margin-top: 1rem;
+}

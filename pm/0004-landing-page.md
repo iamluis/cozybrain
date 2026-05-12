@@ -15,17 +15,17 @@ The web app has to be coherent as a product before we bolt on integrations. A ba
 
 ## Success criteria
 
-- [ ] `/` renders without authentication (already does).
-- [ ] If a session is active, `/` redirects to a sensible home (we'll define what "home" is in 0005; for now keep that behavior off — the landing page is public-only, but we don't redirect signed-in users away yet).
-- [ ] The landing page contains:
+- [x] `/` renders without authentication (already does).
+- [x] If a session is active, `/` redirects to a sensible home (we'll define what "home" is in 0005; for now keep that behavior off — the landing page is public-only, but we don't redirect signed-in users away yet).
+- [x] The landing page contains:
   - Brand mark `brain`.
   - A single-line tagline.
   - A short paragraph explaining the scope ("Quiet bookkeeping for a one-person SLU. Captures expenses, files documents, drafts invoices.").
   - A primary "Sign in" button linking to `/session/new`.
-- [ ] Works on a 360px-wide phone screen without horizontal scroll.
-- [ ] Works on a 1440px-wide laptop without the content stretching across the screen.
-- [ ] Existing root page integration test still green (assert title + sign-in link, drop the `"It works."` assertion).
-- [ ] `bin/ci` green.
+- [x] Works on a 360px-wide phone screen without horizontal scroll.
+- [x] Works on a 1440px-wide laptop without the content stretching across the screen.
+- [x] Existing root page integration test still green (assert title + sign-in link, drop the `"It works."` assertion).
+- [x] `bin/ci` green.
 
 ## Steps
 
@@ -41,3 +41,5 @@ The web app has to be coherent as a product before we bolt on integrations. A ba
 - No nav on this page — that's milestone 0005's job (and only for the *authenticated* shell).
 - No images. Brand mark is the wordmark; an SVG icon can come later if needed.
 - No JavaScript on this page.
+- **Result:** 3 root-page tests pass, 41 total. bin/ci green.
+- Deferred to 0005: redirecting signed-in users away from `/`. Without a shell, signed-in `/` showing the landing is still fine.
