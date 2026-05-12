@@ -33,12 +33,13 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0004 | landing-page               | 🟢 done        |
 | 0005 | navigation                 | 🟢 done        |
 | 0006 | timeline-home              | 🟢 done        |
-| 0007 | holded-integration         | 🔴 not started |
-| 0008 | email-ingestion            | 🔴 not started |
-| 0009 | folder-sync                | 🔴 not started |
-| 0010 | invoice-flow               | 🔴 not started |
+| 0007 | integration-spine          | 🟡 in progress |
+| 0008 | invoicing-feature          | 🔴 not started |
+| 0009 | email-ingestion            | 🔴 not started |
+| 0010 | folder-sync                | 🔴 not started |
 | 0011 | weekly-pulse               | 🔴 not started |
 | 0012 | needs-review               | 🔴 not started |
-| 0013 | deployment-kamal           | 🔴 not started |
+| 0013 | holded-adapter             | 🔴 not started |
+| 0014 | deployment-kamal           | 🔴 not started |
 
 Later milestones are intentionally sketched, not specified. We refine them when we pick them up — speculation now is waste.
