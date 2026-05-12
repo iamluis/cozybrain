@@ -1,0 +1,19 @@
+<% filing = item %>
+<% doc    = filing.filable %>
+<div class="tray__item tray__item--inbound">
+  <div class="tray__item-head">
+    <span class="tray__item-title"><%= doc.subject.presence || "Inbound document" %></span>
+    <span class="tray__item-from"><%= doc.sender.presence || "unknown sender" %></span>
+  </div>
+
+  <div class="tray__pills">
+    <% %w[ expenses tax corporate bank ].each do |folder| %>
+      <%= button_to folder.titleize,
+            tray_classify_path(filing_id: filing.id),
+            method: :post,
+            params: { folder: folder },
+            form: { class: "tray__pill-form" },
+            class: "tray__pill tray__pill--#{folder}" %>
+    <% end %>
+  </div>
+</div>

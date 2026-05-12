@@ -33,4 +33,12 @@ class Filing < ApplicationRecord
   def filed?        = status == "filed"
   def pending?      = status == "pending"
   def trashed?      = trashed_at.present?
+
+  # Tray action: user picks a folder for a low-confidence inbound doc. Moves
+  # it to filed in that folder. Idempotent enough — we trust the caller to
+  # have rendered a valid folder pill.
+  def classify_into!(folder)
+    raise ArgumentError, "unknown folder #{folder.inspect}" unless FOLDERS.include?(folder)
+    update!(folder: folder, status: "filed", filed_at: Time.current)
+  end
 end

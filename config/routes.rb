@@ -2,11 +2,11 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :receipts, only: [ :new, :create, :show ]
-  resource  :timeline, only: :show
   resources :invoices, only: [ :index, :show, :create, :update ] do
     member { post :send_to_client }
   end
-  resource :review,   only: :show
+  resource :home, only: :show
+  post "tray/inbound_docs/:filing_id/classify", to: "tray#classify", as: :tray_classify
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

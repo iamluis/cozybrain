@@ -1,0 +1,53 @@
+<% content_for :title, "Home" %>
+
+<div class="home">
+  <aside class="tray" aria-label="Tray">
+    <header class="tray__header">
+      <h2 class="tray__title">Tray</h2>
+      <span class="tray__count" data-empty="<%= @home.tray_empty? %>">
+        <%= @home.tray_count %>
+      </span>
+    </header>
+
+    <div id="tray" class="tray__body">
+      <% if @home.tray_empty? %>
+        <p class="tray__empty">All clear.</p>
+      <% else %>
+        <ul class="tray__list">
+          <% @home.tray_items.each do |item| %>
+            <li class="tray__row">
+              <%= render tray_partial_for(item), item: item %>
+            </li>
+          <% end %>
+        </ul>
+
+        <% if @home.tray_overflow.positive? %>
+          <p class="tray__overflow">
+            + <%= @home.tray_overflow %> more, hidden until you clear some.
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+  </aside>
+
+  <section class="stream" aria-label="Activity stream">
+    <% if @home.stream_empty? %>
+      <p class="stream__empty card__meta">
+        Quiet so far. <%= link_to "Capture a receipt", new_receipt_path %> when something arrives.
+      </p>
+    <% else %>
+      <div id="stream" class="stream__days">
+        <% @home.stream_events_by_day.each do |date, events| %>
+          <section class="stream__day">
+            <h2 class="stream__day-label"><%= stream_day_label(date) %></h2>
+            <ul class="stream__list">
+              <% events.each do |event| %>
+                <%= render "homes/stream_entry", event: event %>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

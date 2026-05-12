@@ -1,4 +1,4 @@
-<span class="entry__time"><%= timeline_time_of(filing) %></span>
+<span class="entry__time"><%= stream_time_of(filing) %></span>
 
 <div class="entry__body">
   <% case filing.filable %>
@@ -26,8 +26,8 @@
 </div>
 
 <div class="entry__right">
-  <% if (amount = timeline_amount(filing)) %>
-    <span class="<%= timeline_amount_class(filing) %>"><%= amount %></span>
+  <% if (amount = stream_amount(filing)) %>
+    <span class="<%= stream_amount_class(filing) %>"><%= amount %></span>
   <% end %>
   <span class="entry__pill entry__pill--<%= filing.status %>"><%= filing.status.humanize.downcase %></span>
 </div>

@@ -1,0 +1,7 @@
+<li id="stream_event_<%= event.is_a?(Filing) ? "f#{event.id}" : "t#{event.id}" %>" class="stream__entry">
+  <% if event.is_a?(Filing) %>
+    <%= render "homes/stream_filing_entry", filing: event %>
+  <% else %>
+    <%= render "homes/stream_bank_transaction_entry", txn: event %>
+  <% end %>
+</li>

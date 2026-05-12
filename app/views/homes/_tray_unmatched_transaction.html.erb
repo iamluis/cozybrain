@@ -1,0 +1,13 @@
+<% txn = item %>
+<div class="tray__item tray__item--bank">
+  <div class="tray__item-head">
+    <span class="tray__item-title">
+      <%= txn.description.presence || "Bank transaction" %>
+    </span>
+    <span class="tray__item-from">
+      <%= I18n.l(txn.posted_on, format: "%B %-d") %> · <%= stream_amount_for_bank(txn) %>
+    </span>
+  </div>
+
+  <p class="tray__hint">Unmatched. Pick a filing later.</p>
+</div>

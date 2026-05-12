@@ -36,9 +36,9 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0007 | integration-spine          | 🟢 done        |
 | 0008 | invoicing-feature          | 🟢 done        |
 | 0009 | email-ingestion            | 🟢 done        |
-| 0010 | folder-sync                | 🔴 not started |
-| 0011 | weekly-pulse               | 🔴 not started |
-| 0012 | needs-review               | 🔴 not started |
+| 0010 | stream-tray-shell          | 🟢 done        |
+| 0011 | folder-sync                | 🔴 not started |
+| 0012 | weekly-pulse               | 🔴 not started |
 | 0013 | holded-adapter             | 🔴 not started |
 | 0014 | deployment-kamal           | 🔴 not started |
 
