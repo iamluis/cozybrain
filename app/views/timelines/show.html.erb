@@ -1,0 +1,28 @@
+<% content_for :title, "Activity" %>
+
+<div class="page">
+  <h1 class="timeline__title">Activity</h1>
+
+  <% if @timeline.empty? %>
+    <p class="timeline__empty card__meta">
+      Nothing here yet. <%= link_to "Capture a receipt", new_receipt_path %> to get started.
+    </p>
+  <% else %>
+    <% @timeline.events_by_day.each do |date, events| %>
+      <section class="timeline__day">
+        <h2 class="timeline__day-label"><%= timeline_day_label(date) %></h2>
+        <ul class="timeline__list">
+          <% events.each do |event| %>
+            <li class="timeline__entry">
+              <% if event.is_a?(Filing) %>
+                <%= render "timelines/filing_entry", filing: event %>
+              <% else %>
+                <%= render "timelines/bank_transaction_entry", txn: event %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  <% end %>
+</div>

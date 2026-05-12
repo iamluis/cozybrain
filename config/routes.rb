@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :receipts, only: [ :new, :create, :show ]
+  resource  :timeline, only: :show
   resources :invoices, only: :index
   resource  :review,   only: :show
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

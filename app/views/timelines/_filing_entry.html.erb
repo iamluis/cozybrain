@@ -1,0 +1,33 @@
+<span class="entry__time"><%= timeline_time_of(filing) %></span>
+
+<div class="entry__body">
+  <% case filing.filable %>
+  <% when Receipt %>
+    <% receipt = filing.filable %>
+    <span class="entry__title">
+      <%= receipt.vendor.presence || tag.span("Receipt", class: "muted") %>
+    </span>
+    <span class="entry__meta">
+      captured<% if receipt.country.present? %> · <%= receipt.country %><% end %>
+    </span>
+  <% when ReceivedDocument %>
+    <% doc = filing.filable %>
+    <span class="entry__title"><%= doc.subject.presence || doc.kind.humanize %></span>
+    <span class="entry__meta">
+      received<% if doc.sender.present? %> · <%= doc.sender %><% end %>
+    </span>
+  <% when IssuedInvoice %>
+    <% invoice = filing.filable %>
+    <span class="entry__title">
+      <%= invoice.client_name %> · <%= invoice.number %>
+    </span>
+    <span class="entry__meta">issued · <%= invoice.invoice_status %></span>
+  <% end %>
+</div>
+
+<div class="entry__right">
+  <% if (amount = timeline_amount(filing)) %>
+    <span class="<%= timeline_amount_class(filing) %>"><%= amount %></span>
+  <% end %>
+  <span class="entry__pill entry__pill--<%= filing.status %>"><%= filing.status.humanize.downcase %></span>
+</div>

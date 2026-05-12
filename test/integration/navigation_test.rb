@@ -3,10 +3,10 @@ require "test_helper"
 class NavigationTest < ActionDispatch::IntegrationTest
   setup { @user = users(:luis) }
 
-  test "signed-in root redirects to capture" do
+  test "signed-in root redirects to timeline" do
     sign_in_as(@user)
     get root_path
-    assert_redirected_to new_receipt_path
+    assert_redirected_to timeline_path
   end
 
   test "public root shows landing without shell" do

@@ -6,7 +6,7 @@
   <body>
     <div class="shell">
       <header class="shell__header">
-        <%= link_to "brain", root_path, class: "shell__brand" %>
+        <%= link_to "brain", timeline_path, class: "shell__brand" %>
         <nav class="shell__nav" aria-label="Primary">
           <%= link_to "Capture",   new_receipt_path, class: ("active" if current_page?(new_receipt_path)) %>
           <%= link_to "Invoices",  invoices_path,    class: ("active" if request.path.start_with?(invoices_path)) %>

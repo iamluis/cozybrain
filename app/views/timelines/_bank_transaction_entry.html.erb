@@ -1,0 +1,15 @@
+<span class="entry__time">—</span>
+
+<div class="entry__body">
+  <span class="entry__title"><%= txn.description.presence || "Bank transaction" %></span>
+  <span class="entry__meta">bank charge</span>
+</div>
+
+<div class="entry__right">
+  <% if (amount = timeline_amount(txn)) %>
+    <span class="<%= timeline_amount_class(txn) %>"><%= amount %></span>
+  <% end %>
+  <span class="entry__pill entry__pill--<%= txn.matched? ? "matched" : "unmatched" %>">
+    <%= txn.matched? ? "matched" : "unmatched" %>
+  </span>
+</div>

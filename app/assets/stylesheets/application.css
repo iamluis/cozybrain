@@ -324,6 +324,103 @@ button { font: inherit; cursor: pointer; }
   .shell__main { padding-bottom: 0; }
 }
 
+/* Timeline */
+.timeline__title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.timeline__empty {
+  padding: 1rem 0;
+}
+.timeline__day { margin-top: 1.5rem; }
+.timeline__day:first-of-type { margin-top: 0; }
+.timeline__day-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
+.timeline__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.timeline__entry {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+}
+.timeline__entry:last-child { border-bottom: 0; }
+
+.entry__time {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.0625rem;
+}
+.entry__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+.entry__title {
+  font-size: 0.9375rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entry__title .muted { color: var(--muted); }
+.entry__meta {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.entry__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+.entry__amount {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+}
+.entry__amount--negative { color: var(--ink); }
+.entry__amount--positive { color: var(--positive); }
+
+.entry__pill {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--muted);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+.entry__pill--filed,
+.entry__pill--matched,
+.entry__pill--paid,
+.entry__pill--sent {
+  background: var(--positive-bg);
+  color: var(--positive);
+}
+.entry__pill--needs_review,
+.entry__pill--unmatched {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 /* Landing */
 .landing {
   min-height: 100dvh;
