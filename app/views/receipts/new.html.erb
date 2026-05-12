@@ -1,11 +1,11 @@
 <% content_for :title, "Capture receipt" %>
 
-<%= form_with model: @receipt, multipart: true, class: "min-h-screen bg-stone-50 text-stone-900" do |f| %>
-  <div class="mx-auto max-w-md px-5 pt-8 pb-28 space-y-6">
+<%= form_with model: @receipt, multipart: true do |f| %>
+  <div class="page stack">
     <% if @receipt.errors.any? %>
-      <div class="rounded-md bg-rose-50 text-rose-900 px-4 py-3 text-sm">
+      <div class="errors">
         <%= pluralize(@receipt.errors.count, "thing") %> needs fixing:
-        <ul class="mt-1 list-disc list-inside">
+        <ul>
           <% @receipt.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>
           <% end %>
@@ -13,58 +13,57 @@
       </div>
     <% end %>
 
-    <div>
-      <%= f.label :amount, class: "block text-sm text-stone-500 mb-1" %>
-      <div class="flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-3 focus-within:border-stone-900">
-        <span class="text-3xl font-light text-stone-400">€</span>
+    <div class="field">
+      <%= f.label :amount, class: "field__label" %>
+      <div class="amount">
+        <span class="amount__currency">€</span>
         <%= f.number_field :amount,
               step: 0.01,
               inputmode: "decimal",
               autocomplete: "off",
               placeholder: "0.00",
-              class: "w-full bg-transparent text-3xl font-light outline-none placeholder:text-stone-300" %>
+              class: "amount__input" %>
       </div>
     </div>
 
-    <div class="flex items-center justify-between gap-3">
-      <%= f.label :original_photo, class: "flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-dashed border-stone-300 bg-white px-4 py-3 text-stone-600 cursor-pointer" do %>
+    <div class="row">
+      <%= f.label :original_photo, class: "photo" do %>
         <span aria-hidden="true">📷</span>
-        <span class="text-sm">Photo of receipt</span>
-        <%= f.file_field :original_photo, accept: "image/*", capture: "environment", class: "sr-only" %>
+        <span>Photo of receipt</span>
+        <%= f.file_field :original_photo, accept: "image/*", capture: "environment" %>
       <% end %>
-      <%= f.date_field :paid_on, class: "rounded-lg border border-stone-300 bg-white px-3 py-3 text-sm text-stone-700" %>
+      <%= f.date_field :paid_on, class: "date-chip" %>
     </div>
 
-    <div>
-      <%= f.label :vendor, class: "block text-sm text-stone-500 mb-1" %>
+    <div class="field">
+      <%= f.label :vendor, class: "field__label" %>
       <%= f.text_field :vendor,
             autocomplete: "off",
             placeholder: "Where",
-            class: "w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-base outline-none focus:border-stone-900" %>
+            class: "input" %>
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
-      <div>
-        <%= f.label :country, class: "block text-sm text-stone-500 mb-1" %>
+    <div class="grid-2">
+      <div class="field">
+        <%= f.label :country, class: "field__label" %>
         <%= f.select :country,
               Receipt::COUNTRIES,
               { include_blank: "—" },
-              class: "w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-base outline-none focus:border-stone-900" %>
+              class: "select" %>
       </div>
-      <div>
-        <%= label_tag "receipt[note]", "Note", class: "block text-sm text-stone-500 mb-1" %>
+      <div class="field">
+        <%= label_tag "receipt[note]", "Note", class: "field__label" %>
         <%= text_field_tag "receipt[note]", nil,
               placeholder: "Optional",
               autocomplete: "off",
-              class: "w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-base outline-none focus:border-stone-900" %>
+              class: "input" %>
       </div>
     </div>
   </div>
 
-  <div class="fixed bottom-0 inset-x-0 bg-stone-50/95 backdrop-blur border-t border-stone-200 px-5 py-3">
-    <div class="mx-auto max-w-md">
-      <%= f.submit "Save  →  next",
-            class: "w-full rounded-lg bg-stone-900 text-white text-base font-medium py-4 cursor-pointer" %>
+  <div class="bar-bottom">
+    <div class="bar-bottom__inner">
+      <%= f.submit "Save  →  next", class: "button button--primary button--full" %>
     </div>
   </div>
 <% end %>
