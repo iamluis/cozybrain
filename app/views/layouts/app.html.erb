@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "shared/head" %>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="shell__header">
+        <%= link_to "brain", root_path, class: "shell__brand" %>
+        <nav class="shell__nav" aria-label="Primary">
+          <%= link_to "Capture",   new_receipt_path, class: ("active" if current_page?(new_receipt_path)) %>
+          <%= link_to "Invoices",  invoices_path,    class: ("active" if request.path.start_with?(invoices_path)) %>
+          <%= link_to "Review",    review_path,      class: ("active" if current_page?(review_path)) %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "shell__signout", form: { class: "shell__signout-form" } %>
+        </nav>
+      </header>
+
+      <main class="shell__main">
+        <% if notice = flash[:notice] %>
+          <div class="shell__flash"><p class="flash flash--notice"><%= notice %></p></div>
+        <% end %>
+        <% if alert = flash[:alert] %>
+          <div class="shell__flash"><p class="flash flash--alert"><%= alert %></p></div>
+        <% end %>
+
+        <%= yield %>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Primary mobile">
+        <%= link_to new_receipt_path, class: ("active" if current_page?(new_receipt_path)) do %>
+          <span>Capture</span>
+        <% end %>
+        <%= link_to invoices_path, class: ("active" if request.path.start_with?(invoices_path)) do %>
+          <span>Invoices</span>
+        <% end %>
+        <%= link_to review_path, class: ("active" if current_page?(review_path)) do %>
+          <span>Review</span>
+        <% end %>
+      </nav>
+    </div>
+  </body>
+</html>

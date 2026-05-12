@@ -1,0 +1,12 @@
+<% content_for :title, "Review" %>
+
+<div class="page stack">
+  <h1>Review</h1>
+  <p class="card__meta">
+    <%= pluralize(@needs_review_filings.size, "filing") %> waiting,
+    <%= pluralize(@unmatched_transactions.size, "transaction") %> unmatched.
+  </p>
+  <p class="card__meta">
+    The full review surface lands in milestone 0011.
+  </p>
+</div>

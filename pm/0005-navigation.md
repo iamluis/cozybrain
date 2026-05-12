@@ -30,15 +30,15 @@ On laptop the bottom-nav links are duplicated in the header (right of the brand)
 
 ## Success criteria
 
-- [ ] An `app` layout (or modifications to the default layout) is used by every authenticated controller.
-- [ ] Public pages (landing, sessions, passwords) do NOT show the shell.
-- [ ] Authenticated pages show: brand mark linking to root, nav links (Capture, Invoices, Review), Sign out form (`DELETE /session`).
-- [ ] On a 360px phone width, the nav lives at the bottom in a fixed bar with finger-sized targets (≥44px).
-- [ ] On a 768px+ width, the bottom nav hides and the header shows the same links.
-- [ ] Signed-in users hitting `/` redirect to `/receipts/new` (the primary action) — brain.md implies capture is the main entry.
-- [ ] Invoices index and Review pages don't need real content yet — placeholder views with the shell are fine. (Real content lands in 0009 and 0011.)
-- [ ] All existing tests still green; new integration tests cover: shell appears when signed in, signed-in root redirects, sign-out works.
-- [ ] `bin/ci` green.
+- [x] An `app` layout (or modifications to the default layout) is used by every authenticated controller.
+- [x] Public pages (landing, sessions, passwords) do NOT show the shell.
+- [x] Authenticated pages show: brand mark linking to root, nav links (Capture, Invoices, Review), Sign out form (`DELETE /session`).
+- [x] On a 360px phone width, the nav lives at the bottom in a fixed bar with finger-sized targets (≥44px).
+- [x] On a 768px+ width, the bottom nav hides and the header shows the same links.
+- [x] Signed-in users hitting `/` redirect to `/receipts/new` (the primary action) — brain.md implies capture is the main entry.
+- [x] Invoices index and Review pages don't need real content yet — placeholder views with the shell are fine. (Real content lands in 0009 and 0011.)
+- [x] All existing tests still green; new integration tests cover: shell appears when signed in, signed-in root redirects, sign-out works.
+- [x] `bin/ci` green.
 
 ## Steps
 
@@ -56,3 +56,6 @@ On laptop the bottom-nav links are duplicated in the header (right of the brand)
 - Use plain CSS media queries for the responsive swap; no JS needed.
 - The "Invoices" and "Review" placeholder views are intentionally empty — that's a feature, not a bug. They become real in 0009 / 0011.
 - Sign-out is a `<button>` inside a form that POSTs `DELETE /session` (Turbo handles the method override).
+- **Result:** 51 tests, 207 assertions, 0 failures. bin/ci green.
+- Extracted `app/views/shared/_head.html.erb` so both `application.html.erb` (public) and `app.html.erb` (authenticated shell) share the head without duplication.
+- Mobile/desktop nav swap is a single `@media (min-width: 768px)` rule. No JS.

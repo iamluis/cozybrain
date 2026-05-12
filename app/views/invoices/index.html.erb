@@ -1,0 +1,11 @@
+<% content_for :title, "Invoices" %>
+
+<div class="page stack">
+  <h1>Invoices</h1>
+  <p class="card__meta">
+    <%= pluralize(@invoices.size, "invoice") %> on file.
+  </p>
+  <p class="card__meta">
+    The full invoice list and the monthly draft flow arrive in milestone 0009.
+  </p>
+</div>

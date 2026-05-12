@@ -1,4 +1,6 @@
 class ReceiptsController < ApplicationController
+  layout "app"
+
   def new
     @receipt = Receipt.new(paid_on: Date.current, currency: "EUR")
   end

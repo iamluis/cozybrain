@@ -234,6 +234,96 @@ button { font: inherit; cursor: pointer; }
 .auth-page h1 { margin-bottom: 1.5rem; }
 .auth-page .meta { font-size: 0.875rem; color: var(--muted); margin-top: 1rem; }
 
+/* App shell (authenticated layout) */
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.shell__brand {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.125rem;
+}
+.shell__nav {
+  display: none;
+  gap: 1.25rem;
+  align-items: center;
+}
+.shell__nav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.shell__nav a:hover,
+.shell__nav a.active {
+  color: var(--ink);
+}
+.shell__main {
+  flex: 1;
+  padding-bottom: 5rem; /* space for fixed bottom-nav on mobile */
+}
+.shell__flash {
+  padding: 1rem 1.25rem 0;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.shell__signout-form { display: inline; margin: 0; padding: 0; }
+.shell__signout {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.shell__signout:hover { color: var(--ink); }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  z-index: 10;
+}
+.bottom-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 0.25rem;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  min-height: 56px;
+}
+.bottom-nav a.active {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .shell__nav { display: flex; }
+  .bottom-nav { display: none; }
+  .shell__main { padding-bottom: 0; }
+}
+
 /* Landing */
 .landing {
   min-height: 100dvh;
