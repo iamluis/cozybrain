@@ -26,6 +26,8 @@ class OperationJob < ApplicationJob
     case operation.kind
     when "issue_invoice"
       ApplyIssueInvoiceOutcome.call(operation)
+    when "deliver_inbound_document"
+      ApplyDeliverInboundDocumentOutcome.call(operation)
     when "send_notification"
       # nothing to apply — notifications are fire-and-forget
     end
