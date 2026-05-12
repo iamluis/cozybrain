@@ -1,0 +1,23 @@
+<tr class="invoice__line">
+  <td>
+    <%= lf.hidden_field :id %>
+    <%= lf.hidden_field :position %>
+    <%= lf.hidden_field :_destroy, value: "0" %>
+    <%= lf.text_field :description, class: "invoice__input invoice__input--desc", placeholder: "What was the work?" %>
+  </td>
+  <td>
+    <%= lf.number_field :quantity, step: 0.01, class: "invoice__input invoice__input--qty", placeholder: "0" %>
+  </td>
+  <td>
+    <div class="invoice__rate-cell">
+      <%= lf.number_field :unit_amount_cents, class: "invoice__input invoice__input--rate", placeholder: "0" %>
+      <span class="invoice__cents-hint">cents</span>
+    </div>
+  </td>
+  <td class="invoice__line-amount">
+    €<%= number_with_precision((line.quantity.to_f * line.unit_amount_cents.to_i) / 100.0, precision: 2, delimiter: ",") %>
+  </td>
+  <td class="invoice__line-remove">
+    <button type="button" class="invoice__remove" data-action="invoice-lines#removeRow" aria-label="Remove line">×</button>
+  </td>
+</tr>

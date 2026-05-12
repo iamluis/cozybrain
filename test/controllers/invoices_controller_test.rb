@@ -30,8 +30,44 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?]", invoice_path(draft)
     assert_select "input.invoice__input--desc"
     assert_select "input.invoice__input--qty"
+    assert_select "button.invoice__add-line", text: /Add a line/
+    assert_select "button.invoice__remove"
+    assert_select "[data-controller='invoice-lines']"
     assert_select "form[action=?]", send_to_client_invoice_path(draft) do
       assert_select "button", text: /Send to Lab900/
+    end
+  end
+
+  test "update can add a new line item via nested attributes" do
+    draft = issued_invoices(:lab900_may_draft)
+    existing_line = issued_invoice_line_items(:may_consulting_draft)
+
+    assert_difference -> { draft.line_items.reload.count } => 1 do
+      patch invoice_path(draft), params: {
+        issued_invoice: {
+          line_items_attributes: {
+            "0" => { id: existing_line.id, position: existing_line.position, description: existing_line.description, quantity: existing_line.quantity.to_s, unit_amount_cents: existing_line.unit_amount_cents, _destroy: "0" },
+            "1718000000000" => { id: "", position: "2", description: "Extra travel", quantity: "1.0", unit_amount_cents: "12000", _destroy: "0" }
+          }
+        }
+      }
+    end
+
+    assert_redirected_to invoice_path(draft)
+  end
+
+  test "update can remove a line item via _destroy" do
+    draft = issued_invoices(:lab900_may_draft)
+    line  = issued_invoice_line_items(:may_consulting_draft)
+
+    assert_difference -> { draft.line_items.reload.count } => -1 do
+      patch invoice_path(draft), params: {
+        issued_invoice: {
+          line_items_attributes: {
+            "0" => { id: line.id, position: line.position, description: line.description, quantity: line.quantity.to_s, unit_amount_cents: line.unit_amount_cents, _destroy: "1" }
+          }
+        }
+      }
     end
   end
 
