@@ -1,0 +1,20 @@
+pending_certify:
+  kind: certify_receipt
+  status: pending
+  attempt_count: 0
+  max_attempts: 5
+  adapter_name: Adapter::Null::ReceiptCertifier
+  correlation_id: Receipt:1
+  input: <%= { receipt_id: 1, photo_url: "data:image/jpeg;base64,/9j/4AAQ" }.to_json %>
+
+succeeded_notification:
+  kind: send_notification
+  status: succeeded
+  attempt_count: 1
+  max_attempts: 5
+  adapter_name: Adapter::Null::Notifier
+  correlation_id: WeeklyPulse:2026-W19
+  input: <%= { recipient: "hey@cozyedge.tech", subject: "Pulse", body_text: "..." }.to_json %>
+  output: <%= { delivered_at: "2026-05-12T08:00:00Z", provider_message_id: "null-msg-abc" }.to_json %>
+  started_at: 2026-05-12 08:00:00
+  completed_at: 2026-05-12 08:00:01

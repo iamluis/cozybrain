@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_12_181910) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_12_192803) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -105,6 +105,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_181910) do
     t.string "verifactu_ref"
     t.index ["number"], name: "index_issued_invoices_on_number", unique: true
     t.index ["period_year", "period_month"], name: "index_issued_invoices_on_period_year_and_period_month"
+  end
+
+  create_table "operations", force: :cascade do |t|
+    t.string "adapter_name", null: false
+    t.integer "attempt_count", default: 0, null: false
+    t.datetime "completed_at"
+    t.string "correlation_id"
+    t.datetime "created_at", null: false
+    t.text "error"
+    t.json "input", default: {}, null: false
+    t.string "kind", null: false
+    t.integer "max_attempts", default: 5, null: false
+    t.json "output"
+    t.datetime "started_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["correlation_id"], name: "index_operations_on_correlation_id"
+    t.index ["kind", "status"], name: "index_operations_on_kind_and_status"
+    t.index ["status", "attempt_count"], name: "index_operations_on_status_and_attempt_count"
   end
 
   create_table "receipts", force: :cascade do |t|

@@ -77,15 +77,15 @@ config/initializers/
 
 Two ports are wired end-to-end as proof of the pattern. Other ports get added by their owning feature milestones.
 
-- [ ] `operations` table + `Operation` model with state machine. Illegal transitions raise `Runtime::AssertionError`.
-- [ ] `Port::ReceiptCertifier` + `Port::Notifier` with `INPUT_SHAPE` / `OUTPUT_SHAPE` constants and `assert_input!` / `assert_output!` class methods (delegating to `Runtime::Assert.shape!`).
-- [ ] `Adapter::Base` enforces the three-step protocol: assert input → `_perform` → assert output.
-- [ ] `Adapter::Null::ReceiptCertifier` and `Adapter::Null::Notifier` — synthetic outputs, deterministic where useful (seeded SecureRandom in tests).
-- [ ] `Runtime::Dispatcher.call(operation)` — resolves port → adapter, asserts mismatch, drives transitions, paired assertions on input/output.
-- [ ] `Runtime::OperationJob` — Solid Queue job. Re-raises non-terminal failures so the queue retries.
-- [ ] `config/initializers/runtime.rb` binds every known port to its Null adapter by default.
-- [ ] Tests cover: model transitions (positive + negative space), Dispatcher happy path, Dispatcher failure → retry → abort after `max_attempts`, port input/output assertions catching bad data, adapter binding mismatch detection, OperationJob retry semantics.
-- [ ] `bin/ci` green.
+- [x] `operations` table + `Operation` model with state machine. Illegal transitions raise `Runtime::AssertionError`.
+- [x] `Port::ReceiptCertifier` + `Port::Notifier` with `INPUT_SHAPE` / `OUTPUT_SHAPE` constants and `assert_input!` / `assert_output!` class methods (delegating to `Runtime::Assert.shape!`).
+- [x] `Adapter::Base` enforces the three-step protocol: assert input → `_perform` → assert output.
+- [x] `Adapter::Null::ReceiptCertifier` and `Adapter::Null::Notifier` — synthetic outputs, deterministic where useful (seeded SecureRandom in tests).
+- [x] `Runtime::Dispatcher.call(operation)` — resolves port → adapter, asserts mismatch, drives transitions, paired assertions on input/output.
+- [x] `Runtime::OperationJob` — Solid Queue job. Re-raises non-terminal failures so the queue retries.
+- [x] `config/initializers/runtime.rb` binds every known port to its Null adapter by default.
+- [x] Tests cover: model transitions (positive + negative space), Dispatcher happy path, Dispatcher failure → retry → abort after `max_attempts`, port input/output assertions catching bad data, adapter binding mismatch detection, OperationJob retry semantics.
+- [x] `bin/ci` green.
 
 ## Out of scope (deliberately)
 
@@ -112,3 +112,6 @@ Two ports are wired end-to-end as proof of the pattern. Other ports get added by
 - Operation.input is **frozen** semantically: never mutate after enqueue. The dispatcher passes `operation.input.deep_dup` to the adapter to guarantee this.
 - Operation.adapter_name is recorded at enqueue time, asserted to still match the live binding at dispatch time. A binding change after enqueue surfaces as a hard error, not silently uses the new adapter.
 - Naming follows TigerStyle: snake_case methods, no abbreviations. `assert_input!` / `assert_output!` (bang for raising), `_perform` (private hook), `correlation_id` over `corr_id`.
+- **Result:** 101 tests, 334 assertions, 0 failures. bin/ci green.
+- Layout used: everything lives under `app/models/` (`port/`, `adapter/`, `runtime/` subdirs) so Zeitwerk picks it up with zero config. `OperationJob` is the only non-model class — sits in `app/jobs/`.
+- Bindings live in `config/initializers/runtime_bindings.rb` using `to_prepare` so dev-mode reloads re-bind cleanly.

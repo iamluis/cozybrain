@@ -33,7 +33,7 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0004 | landing-page               | 🟢 done        |
 | 0005 | navigation                 | 🟢 done        |
 | 0006 | timeline-home              | 🟢 done        |
-| 0007 | integration-spine          | 🟡 in progress |
+| 0007 | integration-spine          | 🟢 done        |
 | 0008 | invoicing-feature          | 🔴 not started |
 | 0009 | email-ingestion            | 🔴 not started |
 | 0010 | folder-sync                | 🔴 not started |
