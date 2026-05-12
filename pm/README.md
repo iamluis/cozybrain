@@ -30,12 +30,14 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0001 | bootstrap-rails-app        | 🟢 done        |
 | 0002 | domain-models              | 🟢 done        |
 | 0003 | capture-flow               | 🟢 done        |
-| 0004 | holded-integration         | 🔴 not started |
-| 0005 | email-ingestion            | 🔴 not started |
-| 0006 | folder-sync                | 🔴 not started |
-| 0007 | invoice-flow               | 🔴 not started |
-| 0008 | weekly-pulse               | 🔴 not started |
-| 0009 | needs-review               | 🔴 not started |
-| 0010 | deployment-kamal           | 🔴 not started |
+| 0004 | landing-page               | 🔴 not started |
+| 0005 | navigation                 | 🔴 not started |
+| 0006 | holded-integration         | 🔴 not started |
+| 0007 | email-ingestion            | 🔴 not started |
+| 0008 | folder-sync                | 🔴 not started |
+| 0009 | invoice-flow               | 🔴 not started |
+| 0010 | weekly-pulse               | 🔴 not started |
+| 0011 | needs-review               | 🔴 not started |
+| 0012 | deployment-kamal           | 🔴 not started |
 
 Later milestones are intentionally sketched, not specified. We refine them when we pick them up — speculation now is waste.
