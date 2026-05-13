@@ -305,11 +305,18 @@ button { font: inherit; cursor: pointer; }
   align-items: baseline;
   justify-content: space-between;
   padding: 1.25rem 3rem 1rem;
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--bg);
+  /* Match .bottom-nav: paper-tone translucency + frosted blur, so the
+     sticky header lifts off the page the same way the mobile nav does. */
+  background: rgba(246, 242, 231, 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+          backdrop-filter: blur(18px) saturate(180%);
+  border-bottom: 1px solid rgba(184, 175, 150, 0.5);
   position: sticky;
   top: 0;
   z-index: 10;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .shell__header { background: var(--paper); }
 }
 .shell__brand {
   font-weight: 600;
@@ -363,13 +370,16 @@ button { font: inherit; cursor: pointer; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   /* Paper-tone with translucency + a real frosted-glass blur. Stream
-     content shows softly through, no hard white seam. */
-  background: rgba(246, 242, 231, 0.72);  /* --paper at ~70% alpha */
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-          backdrop-filter: blur(18px) saturate(180%);
+     content shows softly through, no hard white seam. More transparent
+     than the desktop header — on iOS the stream visibly drifts under. */
+  background: rgba(246, 242, 231, 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+          backdrop-filter: blur(22px) saturate(180%);
   border-top: 1px solid rgba(184, 175, 150, 0.5);  /* faded --line-strong */
-  /* Respect the iOS Safari home-indicator inset so the nav doesn't hide
-     behind the system UI bar. */
+  /* Respect the iOS Safari home-indicator inset so the nav items stay
+     above the system UI bar. With viewport-fit=cover, the frosted
+     background fills this padding region too, so the safe-area space
+     below the nav looks like part of the same glass — no white seam. */
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 10;
 }
