@@ -5,15 +5,16 @@ class WeeklyPulsesController < ApplicationController
   layout "app"
 
   def show
-    @pulse = WeeklyPulse.new(at: Time.current)
-    fresh_when(
+    return unless stale?(
       last_modified: [
         Filing.maximum(:updated_at),
         IssuedInvoice.maximum(:updated_at),
         BankTransaction.maximum(:updated_at)
       ].compact.max,
-      etag: [ @pulse.week_start, Filing.count, BankTransaction.count ],
+      etag: [ Date.current.beginning_of_week, Filing.count, BankTransaction.count ],
       public: false
     )
+
+    @pulse = WeeklyPulse.new(at: Time.current)
   end
 end

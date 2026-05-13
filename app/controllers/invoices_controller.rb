@@ -4,14 +4,15 @@ class InvoicesController < ApplicationController
   before_action :set_invoice, only: %i[ show update send_to_client ]
 
   def index
-    @draft       = IssuedInvoice.where(invoice_status: "draft").order(created_at: :desc).first
-    @historical  = IssuedInvoice.where.not(invoice_status: "draft").order(period_year: :desc, period_month: :desc)
-    @next_period = next_period_after(@historical.first || @draft)
-    fresh_when(
+    return unless stale?(
       last_modified: IssuedInvoice.maximum(:updated_at),
       etag:          [ IssuedInvoice.count, IssuedInvoice.maximum(:updated_at)&.to_i ],
       public:        false
     )
+
+    @draft       = IssuedInvoice.where(invoice_status: "draft").order(created_at: :desc).first
+    @historical  = IssuedInvoice.where.not(invoice_status: "draft").order(period_year: :desc, period_month: :desc)
+    @next_period = next_period_after(@historical.first || @draft)
   end
 
   def create
