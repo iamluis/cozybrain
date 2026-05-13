@@ -18,10 +18,11 @@ services:
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
     volumes:
-      # SQLite files + Active Storage blobs land on the Hetzner volume
-      # (10GB, separate disk from the root). Mount path comes from fstab:
-      # /dev/disk/by-id/scsi-0HC_Volume_105702184 → /mnt/HC_Volume_105702184
-      - /mnt/HC_Volume_105702184/brain:/rails/storage
+      # SQLite (primary + cache + queue + cable) — local NVMe.
+      # Bench: 803 IOPS @ 40 µs vs network volume's 112 IOPS @ 89 µs.
+      - /opt/brain-db:/rails/storage
+      # Active Storage blobs — network volume (cheaper to grow).
+      - /mnt/HC_Volume_105702184/brain:/rails/blobs
       - ./config/master.key:/rails/config/master.key:ro
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost/up"]
