@@ -59,9 +59,30 @@ module Ledger
       end
     end
 
+    # The date the *event* happened — what the user thinks of as "when",
+    # not when the system received the row.
+    #
+    #   Receipt          → paid_on              (date on the receipt)
+    #   IssuedInvoice    → issued_on, else service_period_end
+    #   ReceivedDocument → received_at (no better signal available)
+    #   BankTransaction  → posted_on
     def at
-      proof_side&.received_at&.to_date || money_side&.posted_on
+      return money_side.posted_on if proof_side.nil?
+      transaction_date_for(proof_side.filable) || proof_side.received_at.to_date
     end
+
+    private
+
+    def transaction_date_for(filable)
+      case filable
+      when Receipt
+        filable.paid_on
+      when IssuedInvoice
+        filable.issued_on || filable.service_period_end
+      end
+    end
+
+    public
 
     # Signed €: positive = inflow, negative = outflow.
     def amount_cents
