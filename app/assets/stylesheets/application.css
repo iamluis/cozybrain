@@ -550,23 +550,28 @@ button { font: inherit; cursor: pointer; }
 .invoice__cell--amt { padding-right: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
 .invoice__cell--rm  { padding: 0; text-align: right; width: 2rem; }
 
-/* Inputs sit in the cell flow — calm ash background, no border, right-aligned
-   for numeric columns. Same look as receipt edit fields. */
+/* Inputs are writable patches on the paper — paper-deep at rest, white
+   only on focus when the user is actively typing. Subtle bottom rule
+   for affordance. */
 .invoice__input {
   width: 100%;
   border: 0;
-  background: #fafaf9;
+  background: var(--paper-deep);
   font: inherit;
   color: inherit;
   padding: 0.4375rem 0.625rem;
   border-radius: 0.25rem;
   text-align: inherit;
-  box-shadow: inset 0 -1px 0 var(--line);
+  box-shadow: inset 0 -1px 0 var(--line-strong);
   transition: background-color 120ms ease, box-shadow 120ms ease;
   box-sizing: border-box;
 }
-.invoice__input:hover { background: #f5f5f4; box-shadow: inset 0 -1px 0 var(--line-strong); }
-.invoice__input:focus { outline: 2px solid var(--ink); outline-offset: -1px; background: var(--surface); box-shadow: none; }
+.invoice__input:hover { background: #e3dcc4; box-shadow: inset 0 -1px 0 var(--ink-soft); }
+.invoice__input:focus {
+  outline: none;
+  background: var(--surface);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
 .invoice__input::placeholder { color: var(--line-strong); }
 .invoice__input--num  { text-align: right; font-variant-numeric: tabular-nums; }
 .invoice__input--desc { text-align: left; }
@@ -700,27 +705,34 @@ button { font: inherit; cursor: pointer; }
 }
 .invoice__settings-field--wide { grid-column: 1 / -1; }
 .invoice__settings-label {
+  font-family: var(--mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--muted);
   font-weight: 500;
 }
 .invoice__settings-input {
   font: inherit;
   color: var(--ink);
-  background: var(--bg);
-  border: 1px solid var(--line);
+  background: var(--paper-deep);
+  border: 0;
   border-radius: 0.25rem;
-  padding: 0.4375rem 0.5rem;
+  box-shadow: inset 0 -1px 0 var(--line-strong);
+  padding: 0.5rem 0.625rem;
   width: 100%;
   box-sizing: border-box;
   min-width: 0;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+.invoice__settings-input:hover {
+  background: #e3dcc4;
+  box-shadow: inset 0 -1px 0 var(--ink-soft);
 }
 .invoice__settings-input:focus {
-  outline: 2px solid var(--ink);
-  outline-offset: -1px;
+  outline: none;
   background: var(--surface);
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 .invoice__settings-input--area {
   resize: vertical;
