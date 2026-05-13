@@ -362,12 +362,20 @@ button { font: inherit; cursor: pointer; }
   bottom: 0; left: 0; right: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: var(--surface);
-  border-top: 1px solid var(--line);
+  /* Paper-tone with translucency + a real frosted-glass blur. Stream
+     content shows softly through, no hard white seam. */
+  background: rgba(246, 242, 231, 0.72);  /* --paper at ~70% alpha */
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+          backdrop-filter: blur(18px) saturate(180%);
+  border-top: 1px solid rgba(184, 175, 150, 0.5);  /* faded --line-strong */
   /* Respect the iOS Safari home-indicator inset so the nav doesn't hide
      behind the system UI bar. */
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 10;
+}
+/* No backdrop-filter? Fall back to opaque paper so it stays readable. */
+@supports not (backdrop-filter: blur(1px)) {
+  .bottom-nav { background: var(--paper); }
 }
 .bottom-nav a {
   display: flex;
