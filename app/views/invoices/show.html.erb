@@ -54,6 +54,13 @@
 
         <%= render "lines_editable", f: f, invoice: @invoice %>
 
+        <%= render "totals_block", invoice: @invoice %>
+
+        <% legal = invoice_legal_mention(@invoice) %>
+        <% if legal.present? %>
+          <p class="invoice__legal"><%= legal %></p>
+        <% end %>
+
         <section class="invoice__settings">
           <div class="invoice__settings-field">
             <%= f.label :tax_treatment, "Tax treatment", class: "invoice__settings-label" %>

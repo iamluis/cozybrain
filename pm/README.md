@@ -39,9 +39,10 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0010 | stream-tray-shell          | 🟢 done        |
 | 0011 | edit-everything-inline     | 🟢 done        |
 | 0012 | invoice-real-fields        | 🟢 done        |
-| 0013 | folder-sync                | 🔴 not started |
+| 0013 | stabilize-ui               | 🟡 in progress |
 | 0014 | weekly-pulse               | 🔴 not started |
-| 0015 | holded-adapter             | 🔴 not started |
-| 0016 | deployment-kamal           | 🔴 not started |
+| 0015 | deployment-kamal           | 🔴 not started |
+| 0016 | folder-sync                | 🔴 not started |
+| 0017 | holded-adapter             | 🔴 not started |
 
 Later milestones are intentionally sketched, not specified. We refine them when we pick them up — speculation now is waste.

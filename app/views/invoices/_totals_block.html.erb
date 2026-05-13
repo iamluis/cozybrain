@@ -1,18 +1,18 @@
-<div class="invoice__totals">
+<div class="invoice__totals" data-tax-rate="<%= invoice.tax_rate %>">
   <div class="invoice__totals-row">
     <span class="invoice__totals-label">Subtotal</span>
-    <span class="invoice__totals-value">€<%= number_with_precision(invoice.subtotal, precision: 2, delimiter: ",") %></span>
+    <span class="invoice__totals-value" data-invoice-lines-target="subtotal">€<%= number_with_precision(invoice.subtotal, precision: 2, delimiter: ",") %></span>
   </div>
 
   <% if invoice.effective_tax_treatment == "domestic_vat_21" %>
     <div class="invoice__totals-row">
       <span class="invoice__totals-label">IVA 21%</span>
-      <span class="invoice__totals-value">€<%= number_with_precision(invoice.tax_amount, precision: 2, delimiter: ",") %></span>
+      <span class="invoice__totals-value" data-invoice-lines-target="taxAmount">€<%= number_with_precision(invoice.tax_amount, precision: 2, delimiter: ",") %></span>
     </div>
   <% end %>
 
   <div class="invoice__totals-row invoice__totals-row--total">
     <span class="invoice__totals-label">Total</span>
-    <span class="invoice__totals-value">€<%= number_with_precision(invoice.total, precision: 2, delimiter: ",") %></span>
+    <span class="invoice__totals-value" data-invoice-lines-target="grandTotal">€<%= number_with_precision(invoice.total, precision: 2, delimiter: ",") %></span>
   </div>
 </div>

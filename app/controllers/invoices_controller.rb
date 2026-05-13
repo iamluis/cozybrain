@@ -42,7 +42,10 @@ class InvoicesController < ApplicationController
 
     if @invoice.update(invoice_params)
       @invoice.recompute_total!
-      redirect_to invoice_path(@invoice), notice: "Saved"
+      # No flash here — the Stimulus controller updates an in-header
+      # "Saved · HH:MM" pill via turbo:submit-end. Setting a flash on
+      # every auto-save submit would shift the layout on every keystroke.
+      redirect_to invoice_path(@invoice)
     else
       render :show, status: :unprocessable_content
     end

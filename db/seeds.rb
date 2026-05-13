@@ -1,15 +1,20 @@
 # Idempotent: safe to run repeatedly.
 
-Client.find_or_create_by!(legal_name: "Lab900") do |c|
-  c.country                     = "BE"
-  c.default_tax_treatment       = "intra_eu_reverse_charge"
-  c.default_payment_terms_days  = 30
-end
+lab900 = Client.find_or_initialize_by(legal_name: "Lab900")
+lab900.assign_attributes(
+  country:                    "BE",
+  default_tax_treatment:      "intra_eu_reverse_charge",
+  default_payment_terms_days: 30
+)
+# Only fill placeholders if the field is blank — never overwrite real data
+# the user has entered.
+lab900.vat_number    ||= "BE0000000000  (replace)"
+lab900.address       ||= "Diestsestraat 75\n3000 Leuven\nBelgium  (replace)"
+lab900.contact_email ||= "accounts@lab900.com  (replace)"
+lab900.default_iban  ||= "ES00 0000 0000 0000 0000 0000  (replace)"
+lab900.save!
 
-# Backfill: every existing invoice that came from before this milestone is
-# Lab900's. The model validates client presence, so without this the test
-# suite breaks after migration.
-lab900 = Client.find_by!(legal_name: "Lab900")
+# Backfill: every existing invoice from before this milestone is Lab900's.
 IssuedInvoice.where(client_id: nil).find_each do |inv|
   start_d = Date.new(inv.period_year, inv.period_month, 1)
   inv.update_columns(

@@ -11,7 +11,7 @@ import { Controller } from "@hotwired/stimulus"
 const AUTOSAVE_DEBOUNCE_MS = 600
 
 export default class extends Controller {
-  static targets = ["rows", "template", "total", "savedPill"]
+  static targets = ["rows", "template", "subtotal", "taxAmount", "grandTotal", "savedPill"]
 
   connect() {
     this._timer = null
@@ -49,14 +49,14 @@ export default class extends Controller {
   }
 
   recomputeTotal() {
-    let totalEuros = 0
+    let subtotal = 0
     this.rowsTarget.querySelectorAll(".invoice__line").forEach((row) => {
       if (row.style.display === "none") return
       const qty  = parseFloat(row.querySelector("[name*='[quantity]']")?.value || 0)
       const rate = parseFloat(row.querySelector("[name*='[unit_amount]']")?.value || 0)
       if (Number.isFinite(qty) && Number.isFinite(rate)) {
         const lineTotal = qty * rate
-        totalEuros += lineTotal
+        subtotal += lineTotal
 
         const amountCell = row.querySelector(".invoice__line-amount")
         if (amountCell) {
@@ -65,9 +65,14 @@ export default class extends Controller {
       }
     })
 
-    if (this.hasTotalTarget) {
-      this.totalTarget.textContent = `€${totalEuros.toFixed(2)}`
-    }
+    const totalsEl = this.element.querySelector(".invoice__totals")
+    const taxRate  = parseFloat(totalsEl?.dataset.taxRate || 0)
+    const taxAmt   = subtotal * taxRate
+    const total    = subtotal + taxAmt
+
+    if (this.hasSubtotalTarget)   this.subtotalTarget.textContent   = `€${subtotal.toFixed(2)}`
+    if (this.hasTaxAmountTarget)  this.taxAmountTarget.textContent  = `€${taxAmt.toFixed(2)}`
+    if (this.hasGrandTotalTarget) this.grandTotalTarget.textContent = `€${total.toFixed(2)}`
   }
 
   scheduleSubmit() {

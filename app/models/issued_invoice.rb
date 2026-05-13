@@ -15,6 +15,7 @@ class IssuedInvoice < ApplicationRecord
   has_one_attached :pdf
 
   before_validation :sync_period_from_service_period
+  before_validation :normalize_blank_tax_treatment
   after_update :sync_filing_period,
                if: -> { saved_change_to_service_period_end? || saved_change_to_service_period_start? }
 
@@ -43,8 +44,15 @@ class IssuedInvoice < ApplicationRecord
     iban_override.presence || client.default_iban
   end
 
+  # Drafts always read the live client name. Once sent, the snapshot
+  # (`client_name`) freezes so a later client rename doesn't rewrite
+  # history.
   def display_client_name
-    client_name.presence || client&.legal_name
+    if invoice_draft? || invoice_approved?
+      client&.legal_name
+    else
+      client_name.presence || client&.legal_name
+    end
   end
 
   # Money. Internal storage is *_cents (int); decimals are computed.
@@ -134,6 +142,10 @@ class IssuedInvoice < ApplicationRecord
   end
 
   private
+
+  def normalize_blank_tax_treatment
+    self.tax_treatment = nil if tax_treatment.blank?
+  end
 
   def sync_period_from_service_period
     return unless service_period_end
