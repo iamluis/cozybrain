@@ -36,3 +36,6 @@
 # macOS
 .DS_Store
 
+
+# Active Storage local blobs — never commit these.
+/blobs/
