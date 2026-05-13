@@ -387,80 +387,95 @@ button { font: inherit; cursor: pointer; }
   .shell__main { padding-bottom: 0; }
 }
 
-/* Invoices index */
-.invoice-card {
-  display: block;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  margin-top: 0.5rem;
+/* Invoices index — ledger-shaped, no card frames. */
+.invoices-page {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 3rem 2.5rem 6rem;
 }
-.invoice-card--draft {
-  border-style: dashed;
+.invoices__head { margin-bottom: 2rem; }
+.invoices__title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
-.invoice-card__row {
+
+/* Draft block — a typographic header above the history list. */
+.invoices__draft {
+  padding: 1.25rem 0 1.5rem;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2rem;
+}
+.invoices__draft--empty { padding: 1rem 0; }
+.invoices__draft-head {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
-.invoice-card__label {
+.invoices__draft-label {
+  font-family: var(--mono);
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   color: var(--muted);
 }
-.invoice-card__period {
-  font-size: 1.125rem;
-  font-weight: 500;
+.invoices__draft-open {
+  font-size: 0.875rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
 }
-.invoice-card__client {
-  margin-top: 0.5rem;
-  color: var(--muted);
-  font-size: 0.9375rem;
+.invoices__draft-open:hover { color: var(--accent-deep); border-bottom-color: var(--accent-deep); }
+.invoices__draft-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
 }
-.invoice-card__total {
-  margin-top: 0.5rem;
-  font-size: 2rem;
-  font-weight: 300;
-  font-variant-numeric: tabular-nums;
-}
+.invoices__draft-client { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.01em; }
+.invoices__draft-amount { font-size: 1.5rem; font-weight: 500; }
 
-.invoice-start-form { margin-top: 0.5rem; }
+.invoice-start-form { margin: 0; padding: 0; display: inline; }
 
-.invoice-history { margin-top: 2rem; }
-.invoice-history__label {
+/* History — ledger rows. */
+.invoices__history { margin-top: 1rem; }
+.invoices__section-label {
+  font-family: var(--mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   color: var(--muted);
-  margin: 0 0 0.5rem;
   font-weight: 500;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--line-strong);
 }
-.invoice-history__list {
-  list-style: none; margin: 0; padding: 0;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.invoice-history__item + .invoice-history__item {
-  border-top: 1px solid var(--line);
-}
-.invoice-history__link {
+.invoices__list { list-style: none; margin: 0; padding: 0; }
+.invoices__row { border-bottom: 1px solid var(--line); }
+.invoices__row:last-child { border-bottom: 0; }
+.invoices__entry {
   display: grid;
-  grid-template-columns: 8rem 1fr auto auto;
-  gap: 0.75rem;
+  grid-template-columns: 6.5rem minmax(0, 1fr) 7rem auto;
+  gap: 1rem;
   align-items: baseline;
-  padding: 0.75rem 1rem;
+  padding: 0.625rem 0;
   text-decoration: none;
   color: inherit;
+  transition: background-color 0.1s;
 }
-.invoice-history__period { font-weight: 500; }
-.invoice-history__client { color: var(--muted); font-size: 0.875rem; }
-.invoice-history__amount { font-variant-numeric: tabular-nums; }
+.invoices__entry:hover {
+  background: var(--paper-deep);
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.invoices__number { color: var(--muted); font-size: 0.8125rem; }
+.invoices__client { font-size: 0.9375rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.invoices__period { color: var(--muted); font-size: 0.8125rem; }
+.invoices__amount { text-align: right; font-size: 0.9375rem; }
 
 /* Invoice document view */
 /* Invoice — a document, not a card. No rounded frame, no white surface

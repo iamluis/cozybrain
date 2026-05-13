@@ -6,6 +6,11 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
+  # Allow access over Tailscale (100.64.0.0/10) and the *.ts.net magic-DNS
+  # hostnames. Localhost remains the default allowed host.
+  config.hosts << /\A100(\.\d+){3}\z/      # any 100.x.x.x Tailscale IP
+  config.hosts << /\A[a-z0-9-]+\.[a-z0-9-]+\.ts\.net\z/  # Tailscale MagicDNS
+
   # Do not eager load code on boot.
   config.eager_load = false
 

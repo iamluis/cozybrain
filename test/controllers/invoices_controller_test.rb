@@ -6,8 +6,9 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
   test "index shows draft prominently and historical below" do
     get invoices_path
     assert_response :success
-    assert_select "a.invoice-card--draft"
-    assert_select ".invoice-history__list"
+    assert_select ".invoices__draft"
+    assert_select ".invoices__draft-open[href=?]", invoice_path(issued_invoices(:lab900_may_draft))
+    assert_select ".invoices__list"
   end
 
   test "create produces a new draft for the next period" do
