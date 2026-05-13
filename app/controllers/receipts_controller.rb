@@ -17,9 +17,11 @@ class ReceiptsController < ApplicationController
   end
 
   def show
+    fresh_when(@receipt, etag: [ @receipt, @receipt.filing ])
   end
 
   def edit
+    fresh_when(@receipt, etag: [ @receipt, @receipt.filing ])
   end
 
   def update

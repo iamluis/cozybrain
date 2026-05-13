@@ -7,6 +7,11 @@ class InvoicesController < ApplicationController
     @draft       = IssuedInvoice.where(invoice_status: "draft").order(created_at: :desc).first
     @historical  = IssuedInvoice.where.not(invoice_status: "draft").order(period_year: :desc, period_month: :desc)
     @next_period = next_period_after(@historical.first || @draft)
+    fresh_when(
+      last_modified: IssuedInvoice.maximum(:updated_at),
+      etag:          [ IssuedInvoice.count, IssuedInvoice.maximum(:updated_at)&.to_i ],
+      public:        false
+    )
   end
 
   def create
@@ -35,6 +40,8 @@ class InvoicesController < ApplicationController
   end
 
   def show
+    # The invoice itself + its line items change together; etag tracks both.
+    fresh_when(@invoice, etag: [ @invoice, @invoice.line_items.maximum(:updated_at)&.to_i ])
   end
 
   def update
