@@ -4,7 +4,10 @@ test:
 
 local:
   service: Disk
-  root: <%= Rails.root.join("storage") %>
+  # Active Storage blobs (receipt photos, certified PDFs) live separate
+  # from the SQLite databases — they get mounted onto the Hetzner volume
+  # in production, while SQLite stays on the box's fast local NVMe.
+  root: <%= Rails.root.join("blobs") %>
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:

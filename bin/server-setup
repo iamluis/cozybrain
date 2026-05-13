@@ -28,9 +28,9 @@ scp config/master.key "$REMOTE_HOST:$REMOTE_PATH/config/master.key"
 ssh "$REMOTE_HOST" "chown 1000:1000 $REMOTE_PATH/config/master.key && \
                     chmod 600 $REMOTE_PATH/config/master.key"
 
-echo "→ preparing storage dir on the Hetzner volume..."
-ssh "$REMOTE_HOST" "mkdir -p /mnt/HC_Volume_105702184/brain && \
-                    chown 1000:1000 /mnt/HC_Volume_105702184/brain"
+echo "→ preparing data directories..."
+ssh "$REMOTE_HOST" "mkdir -p /opt/brain-db /mnt/HC_Volume_105702184/brain && \
+                    chown 1000:1000 /opt/brain-db /mnt/HC_Volume_105702184/brain"
 
 echo "→ first build + start..."
 ssh "$REMOTE_HOST" "cd $REMOTE_PATH && docker compose up -d --build"
