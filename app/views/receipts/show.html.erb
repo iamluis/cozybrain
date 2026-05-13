@@ -10,8 +10,8 @@
 
   <%= render "card", receipt: @receipt %>
 
-  <div class="grid-2">
-    <%= link_to "Add another", new_receipt_path, class: "button button--primary button--full" %>
-    <%= link_to "Done",        root_path,        class: "button button--full" %>
+  <div class="card-actions">
+    <%= link_to "Capture another", new_receipt_path, class: "button button--primary button--small" %>
+    <%= link_to "Home",            root_path,        class: "button--quiet" %>
   </div>
 </div>

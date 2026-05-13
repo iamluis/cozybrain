@@ -61,22 +61,22 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form[enctype='multipart/form-data']"
   end
 
-  test "show renders the saved confirmation with Add another and Done" do
+  test "show renders the saved confirmation with Capture another and Home" do
     sign_in_as(@user)
     receipt = receipts(:lab900_dinner)
 
     get receipt_path(receipt)
     assert_response :success
-    assert_select "a[href=?]", new_receipt_path, text: "Add another"
-    assert_select "a[href=?]", root_path,        text: "Done"
+    assert_select "a[href=?]", new_receipt_path, text: "Capture another"
+    assert_select "a[href=?]", root_path,        text: "Home"
   end
 
-  test "show includes an Edit affordance pointing at edit_receipt_path" do
+  test "show makes the whole card body an Edit link" do
     sign_in_as(@user)
     receipt = receipts(:lab900_dinner)
 
     get receipt_path(receipt)
-    assert_select "a[href=?]", edit_receipt_path(receipt), text: "Edit"
+    assert_select "a.card__body[href=?]", edit_receipt_path(receipt)
   end
 
   test "show renders the photo when one is attached" do

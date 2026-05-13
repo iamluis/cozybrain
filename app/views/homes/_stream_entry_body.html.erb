@@ -1,40 +1,21 @@
 <span class="entry__time num"><%= stream_entry_time(entry) %></span>
 
 <div class="entry__body">
-  <% if entry.proof_side %>
-    <% filing = entry.proof_side %>
-    <% case filing.filable %>
-    <% when Receipt %>
-      <% receipt = filing.filable %>
-      <span class="entry__title">
-        <%= receipt.vendor.presence || tag.span("Receipt", class: "muted") %>
-      </span>
-      <span class="entry__meta">
-        captured<% if receipt.country.present? %> · <%= receipt.country %><% end %>
-      </span>
-    <% when ReceivedDocument %>
-      <% doc = filing.filable %>
-      <span class="entry__title"><%= doc.subject.presence || doc.kind.humanize %></span>
-      <span class="entry__meta">
-        received<% if doc.sender.present? %> · <%= doc.sender %><% end %>
-      </span>
-    <% when IssuedInvoice %>
-      <% invoice = filing.filable %>
-      <span class="entry__title">
-        <%= invoice.display_client_name %> · <%= invoice.number %>
-      </span>
-      <span class="entry__meta">issued · <%= ledger_state_label(entry) %></span>
+  <span class="entry__title"><%= stream_entry_title(entry) %></span>
+  <span class="entry__meta">
+    <% stream_entry_meta_parts(entry).each_with_index do |part, i| %>
+      <% if i > 0 %><span class="entry__sep">·</span><% end %>
+      <span class="entry__tag entry__tag--<%= part %>"><%= part %></span>
     <% end %>
-  <% else %>
-    <% txn = entry.money_side %>
-    <span class="entry__title"><%= txn.description.presence || "Bank transaction" %></span>
-    <span class="entry__meta">bank charge</span>
-  <% end %>
+    <% if note = stream_entry_note(entry) %>
+      <span class="entry__sep">·</span>
+      <span class="entry__note">"<%= truncate(note, length: 48) %>"</span>
+    <% end %>
+  </span>
 </div>
 
 <div class="entry__right">
   <% if entry.amount %>
     <span class="<%= stream_entry_amount_class(entry) %> num"><%= stream_entry_amount(entry) %></span>
   <% end %>
-  <span class="entry__pill entry__pill--filed"><%= ledger_state_label(entry).downcase %></span>
 </div>

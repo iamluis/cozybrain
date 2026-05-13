@@ -1,6 +1,6 @@
 <div class="card">
   <% if receipt.original_photo.attached? %>
-    <%= link_to receipt.original_photo, target: "_blank", rel: "noopener", class: "card__photo" do %>
+    <%= link_to receipt.original_photo, target: "_blank", rel: "noopener", class: "card__photo", title: "Open full size" do %>
       <%= image_tag receipt.original_photo,
             alt: "Receipt photo",
             class: "card__photo-img",
@@ -8,20 +8,18 @@
     <% end %>
   <% end %>
 
-  <div class="card__amount num">
-    €<%= number_with_precision(receipt.amount_cents / 100.0, precision: 2) %>
-  </div>
-  <div>
-    <%= receipt.vendor.presence || tag.span("(no vendor)", class: "card__meta") %>
-  </div>
-  <div class="card__meta">
-    <span class="num"><%= l(receipt.paid_on, format: :long) %></span><% if receipt.country.present? %> · <%= receipt.country %><% end %>
-  </div>
-  <% if receipt.filing.note.present? %>
-    <div class="card__note">"<%= receipt.filing.note %>"</div>
+  <%= link_to edit_receipt_path(receipt), class: "card__body", title: "Edit" do %>
+    <div class="card__amount num">
+      €<%= number_with_precision(receipt.amount_cents / 100.0, precision: 2) %>
+    </div>
+    <div class="card__vendor">
+      <%= receipt.vendor.presence || tag.span("(no vendor)", class: "card__meta") %>
+    </div>
+    <div class="card__meta">
+      <span class="num"><%= l(receipt.paid_on, format: :long) %></span><% if receipt.country.present? %> · <%= receipt.country %><% end %>
+    </div>
+    <% if receipt.filing.note.present? %>
+      <div class="card__note">"<%= receipt.filing.note %>"</div>
+    <% end %>
   <% end %>
-
-  <div class="card__actions">
-    <%= link_to "Edit", edit_receipt_path(receipt), class: "card__edit" %>
-  </div>
 </div>

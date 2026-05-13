@@ -202,32 +202,36 @@ button { font: inherit; cursor: pointer; }
 }
 .bar-bottom__inner { max-width: var(--max-w); margin: 0 auto; }
 
-/* Cards */
+/* Receipt card — a small piece of paper sitting on the desk.
+   The data block is the edit-link; click anywhere on it to edit. */
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
-.card__amount { font-size: 2.25rem; font-weight: 300; }
-.card__meta   { font-size: 0.875rem; color: var(--muted); }
-.card__note   { font-style: italic; color: #44403c; font-size: 0.875rem; }
-.card__actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--line);
-  margin-top: 0.75rem;
-}
-.card__edit {
-  font-size: 0.8125rem;
-  color: var(--muted);
+.card__body {
+  display: block;
+  padding: 1.25rem 1.5rem 1.5rem;
   text-decoration: none;
+  color: inherit;
+  transition: background-color 0.12s;
 }
-.card__edit:hover { color: var(--ink); }
+.card__body:hover {
+  background: var(--paper-deep);
+}
+.card__amount { font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+.card__vendor { font-size: 1rem; }
+.card__meta   { font-size: 0.875rem; color: var(--muted); margin-top: 0.125rem; }
+.card__note   { font-style: italic; color: var(--ink-soft); font-size: 0.875rem; margin-top: 0.5rem; }
+
+/* Compact action row under the card — no full-width primary buttons. */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.25rem;
+}
 
 .page__title {
   font-size: 1.25rem;
@@ -923,8 +927,35 @@ textarea.invoice__settings-input {
 .entry__meta {
   font-size: 0.8125rem;
   color: var(--muted);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4375rem;
   white-space: nowrap;
   flex: 0 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.entry__sep { color: var(--line-strong); }
+.entry__tag {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+/* Highlight the meaningful tags so they catch the eye. */
+.entry__tag--photo,
+.entry__tag--matched,
+.entry__tag--note { color: var(--accent); }
+.entry__tag--income { color: var(--positive); }
+.entry__tag--tax,
+.entry__tag--corporate { color: var(--ink-soft); }
+.entry__note {
+  font-style: italic;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 16rem;
 }
 
 .entry__right { display: flex; align-items: baseline; gap: 0.875rem; }
@@ -1059,7 +1090,9 @@ textarea.invoice__settings-input {
   font-variant-numeric: tabular-nums;
   padding-top: 0.0625rem;
 }
-.entry__body {
+/* Legacy block — replaced by the row-direction .entry__body below for the
+   denser ledger layout. Kept as no-op to avoid breaking anything else.   */
+.entry__body--legacy-noop {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
@@ -1230,36 +1263,48 @@ textarea.invoice__settings-input {
 }
 .button--inline:hover { color: var(--ink); }
 
-/* Receipt photo on the saved-card view */
+/* Receipt photo on the saved-card view. Fixed aspect ratio + paper-deep
+   filler so the layout doesn't jump while the image is loading. The link
+   is invisible (no outline / underline / focus border) — only the image
+   shows. */
 .card__photo {
   display: block;
-  margin: -1.5rem -1.5rem 0.75rem;  /* bleed to the card edge */
-  background: #f4f4f3;
+  background: var(--paper-deep);
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid var(--line);
+  outline: none;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
 }
+.card__photo:focus,
+.card__photo:focus-visible { outline: none; }
 .card__photo-img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 360px;
+  height: 100%;
   object-fit: contain;
-  border-top-left-radius: var(--radius-lg);
-  border-top-right-radius: var(--radius-lg);
+  /* Subtle hint that the photo is clickable on hover. */
+  transition: opacity 0.12s;
 }
+.card__photo:hover .card__photo-img { opacity: 0.9; }
 
 .edit-photo {
   display: block;
-  background: #f4f4f3;
+  background: var(--paper-deep);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 0.5rem;
   text-decoration: none;
   color: var(--muted);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  outline: none;
 }
 .edit-photo__img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 300px;
+  height: 100%;
   object-fit: contain;
   border-radius: 0.25rem;
 }

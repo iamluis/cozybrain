@@ -30,6 +30,57 @@ module StreamHelper
     end
   end
 
+  # Title for a stream entry — vendor / subject / client+number.
+  def stream_entry_title(entry)
+    case entry.proof_side&.filable
+    when Receipt
+      entry.proof_side.filable.vendor.presence || "Receipt"
+    when ReceivedDocument
+      doc = entry.proof_side.filable
+      doc.subject.presence || doc.kind.humanize
+    when IssuedInvoice
+      inv = entry.proof_side.filable
+      "#{inv.display_client_name} · #{inv.number}"
+    else
+      entry.money_side&.description.presence || "Bank transaction"
+    end
+  end
+
+  # Returns the inline meta parts (kind, locale, photo, matched, note) as
+  # an array; the view joins them with mono `·` separators.
+  def stream_entry_meta_parts(entry)
+    parts = []
+    parts << ledger_kind_label(entry).downcase
+    parts << stream_entry_locale(entry) if stream_entry_locale(entry)
+    parts << "photo"   if stream_entry_has_photo?(entry)
+    parts << "note"    if stream_entry_note(entry)
+    parts << "matched" if entry.both_sides?
+    parts
+  end
+
+  def stream_entry_locale(entry)
+    case entry.proof_side&.filable
+    when Receipt           then entry.proof_side.filable.country.presence
+    when ReceivedDocument  then entry.proof_side.filable.sender.presence
+    when IssuedInvoice     then nil
+    end
+  end
+
+  def stream_entry_has_photo?(entry)
+    entry.proof_side&.filable.is_a?(Receipt) &&
+      entry.proof_side.filable.original_photo.attached?
+  end
+
+  def stream_entry_note(entry)
+    entry.proof_side&.note.presence
+  end
+
+  # LedgerHelper is part of the same view chain so its methods are
+  # available here without explicit include.
+  def ledger_kind_label_from_entry(entry)
+    ledger_kind_label(entry)
+  end
+
   private
 
   def formatted_amount(cents)
