@@ -881,9 +881,12 @@ textarea.invoice__settings-input {
   border-bottom: 1px solid var(--line);
 }
 .stream__row:last-child { border-bottom: 0; }
+/* Four fixed columns: time | title | meta | amount.
+   Each grows/truncates inside its own lane — meta length never moves
+   the title or the amount; title length never pushes the meta.        */
 .stream__entry {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 18rem) 6.5rem;
   gap: 1rem;
   padding: 0.4375rem 0;
   align-items: baseline;
@@ -898,20 +901,12 @@ textarea.invoice__settings-input {
   padding-right: 0.5rem;
 }
 
-/* Entry body: title + meta on the SAME line. Title truncates with
-   ellipsis; meta is fixed-width on the right side of the body cell. */
 .entry__time {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   font-size: 0.8125rem;
   color: var(--muted);
   letter-spacing: 0.02em;
-}
-.entry__body {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  min-width: 0;
 }
 .entry__title {
   font-size: 0.9375rem;
@@ -922,19 +917,37 @@ textarea.invoice__settings-input {
   white-space: nowrap;
   letter-spacing: -0.005em;
   min-width: 0;
-  flex: 1 1 auto;
 }
 .entry__meta {
   font-size: 0.8125rem;
   color: var(--muted);
   display: inline-flex;
   align-items: baseline;
+  justify-content: flex-start;
   gap: 0.4375rem;
   white-space: nowrap;
-  flex: 0 0 auto;
   overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 0;
+}
+.entry__amount-cell {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile: collapse meta below the title; amount stays at the right edge. */
+@media (max-width: 760px) {
+  .stream__entry {
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "time title amount"
+      ".    meta  meta";
+    row-gap: 0.125rem;
+  }
+  .entry__time         { grid-area: time; }
+  .entry__title        { grid-area: title; }
+  .entry__meta         { grid-area: meta; justify-content: flex-start; }
+  .entry__amount-cell  { grid-area: amount; }
 }
 .entry__sep { color: var(--line-strong); }
 .entry__tag {
@@ -958,7 +971,6 @@ textarea.invoice__settings-input {
   max-width: 16rem;
 }
 
-.entry__right { display: flex; align-items: baseline; gap: 0.875rem; }
 .entry__amount {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;

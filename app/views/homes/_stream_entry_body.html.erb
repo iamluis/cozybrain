@@ -1,21 +1,20 @@
 <span class="entry__time num"><%= stream_entry_time(entry) %></span>
 
-<div class="entry__body">
-  <span class="entry__title"><%= stream_entry_title(entry) %></span>
-  <span class="entry__meta">
-    <% stream_entry_meta_parts(entry).each_with_index do |part, i| %>
-      <% if i > 0 %><span class="entry__sep">·</span><% end %>
-      <span class="entry__tag entry__tag--<%= part %>"><%= part %></span>
-    <% end %>
-    <% if note = stream_entry_note(entry) %>
-      <span class="entry__sep">·</span>
-      <span class="entry__note">"<%= truncate(note, length: 48) %>"</span>
-    <% end %>
-  </span>
-</div>
+<span class="entry__title"><%= stream_entry_title(entry) %></span>
 
-<div class="entry__right">
+<span class="entry__meta">
+  <% stream_entry_meta_parts(entry).each_with_index do |part, i| %>
+    <% if i > 0 %><span class="entry__sep">·</span><% end %>
+    <span class="entry__tag entry__tag--<%= part %>"><%= part %></span>
+  <% end %>
+  <% if note = stream_entry_note(entry) %>
+    <span class="entry__sep">·</span>
+    <span class="entry__note">"<%= truncate(note, length: 32) %>"</span>
+  <% end %>
+</span>
+
+<span class="entry__amount-cell">
   <% if entry.amount %>
     <span class="<%= stream_entry_amount_class(entry) %> num"><%= stream_entry_amount(entry) %></span>
   <% end %>
-</div>
+</span>
