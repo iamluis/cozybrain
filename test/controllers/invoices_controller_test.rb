@@ -29,7 +29,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "form[action=?]", invoice_path(draft)
     assert_select "input.invoice__input--desc"
-    assert_select "input.invoice__input--qty"
+    assert_select "input.invoice__input--num"
     assert_select "button.invoice__add-line", text: /Add a line/
     assert_select "button.invoice__remove"
     assert_select "[data-controller='invoice-lines']"
@@ -77,7 +77,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".invoice__lines--readonly"
-    assert_select "input.invoice__input--qty", false
+    assert_select "input.invoice__input--num", false
   end
 
   test "update saves line item edits and recomputes total" do

@@ -1,28 +1,26 @@
 <table class="invoice__lines invoice__lines--readonly">
+  <colgroup>
+    <col class="invoice__col-desc">
+    <col class="invoice__col-num">
+    <col class="invoice__col-num">
+    <col class="invoice__col-amt">
+  </colgroup>
   <thead>
     <tr>
-      <th class="invoice__col-desc">Description</th>
-      <th class="invoice__col-qty">Quantity</th>
-      <th class="invoice__col-rate">Rate</th>
-      <th class="invoice__col-amt">Amount</th>
+      <th class="invoice__th invoice__th--desc">Description</th>
+      <th class="invoice__th invoice__th--num">Quantity</th>
+      <th class="invoice__th invoice__th--num">Rate (€)</th>
+      <th class="invoice__th invoice__th--amt">Amount</th>
     </tr>
   </thead>
   <tbody>
     <% invoice.line_items.each do |line| %>
       <tr class="invoice__line">
-        <td><%= line.description %></td>
-        <td><%= line.quantity %></td>
-        <td>€<%= number_with_precision(line.unit_amount_cents / 100.0, precision: 2, delimiter: ",") %></td>
-        <td class="invoice__line-amount">€<%= number_with_precision(line.total_cents / 100.0, precision: 2, delimiter: ",") %></td>
+        <td class="invoice__cell invoice__cell--desc"><%= line.description %></td>
+        <td class="invoice__cell invoice__cell--num"><%= format_quantity(line.quantity) %></td>
+        <td class="invoice__cell invoice__cell--num"><%= format_money(line.unit_amount) %></td>
+        <td class="invoice__cell invoice__cell--amt"><%= display_money(line.total) %></td>
       </tr>
     <% end %>
   </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="3" class="invoice__total-label">Total</td>
-      <td class="invoice__total-amount">
-        €<%= number_with_precision(invoice.amount_cents / 100.0, precision: 2, delimiter: ",") %>
-      </td>
-    </tr>
-  </tfoot>
 </table>

@@ -1,12 +1,19 @@
 <div class="invoice__lines-wrap">
   <table class="invoice__lines">
+    <colgroup>
+      <col class="invoice__col-desc">
+      <col class="invoice__col-num">
+      <col class="invoice__col-num">
+      <col class="invoice__col-amt">
+      <col class="invoice__col-rm">
+    </colgroup>
     <thead>
       <tr>
-        <th class="invoice__col-desc">Description</th>
-        <th class="invoice__col-qty">Quantity</th>
-        <th class="invoice__col-rate">Rate</th>
-        <th class="invoice__col-amt">Amount</th>
-        <th class="invoice__col-rm" aria-hidden="true"></th>
+        <th class="invoice__th invoice__th--desc">Description</th>
+        <th class="invoice__th invoice__th--num">Quantity</th>
+        <th class="invoice__th invoice__th--num">Rate (€)</th>
+        <th class="invoice__th invoice__th--amt">Amount</th>
+        <th class="invoice__th invoice__th--rm" aria-hidden="true"></th>
       </tr>
     </thead>
     <tbody data-invoice-lines-target="rows">

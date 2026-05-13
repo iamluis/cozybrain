@@ -49,18 +49,25 @@ export default class extends Controller {
   }
 
   recomputeTotal() {
+    // Money formatter: en-US so the "." stays the decimal regardless of
+    // browser locale, matches the server-side display_money helper.
+    const eur = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
     let subtotal = 0
     this.rowsTarget.querySelectorAll(".invoice__line").forEach((row) => {
       if (row.style.display === "none") return
-      const qty  = parseFloat(row.querySelector("[name*='[quantity]']")?.value || 0)
-      const rate = parseFloat(row.querySelector("[name*='[unit_amount]']")?.value || 0)
+      // Inputs are comma-tolerant: parse "650,00" the same as "650.00".
+      const qtyRaw  = row.querySelector("[name*='[quantity]']")?.value || ""
+      const rateRaw = row.querySelector("[name*='[unit_amount]']")?.value || ""
+      const qty  = parseFloat(qtyRaw.replace(",", "."))
+      const rate = parseFloat(rateRaw.replace(",", "."))
       if (Number.isFinite(qty) && Number.isFinite(rate)) {
         const lineTotal = qty * rate
         subtotal += lineTotal
 
         const amountCell = row.querySelector(".invoice__line-amount")
         if (amountCell) {
-          amountCell.textContent = `€${lineTotal.toFixed(2)}`
+          amountCell.textContent = `€${eur.format(lineTotal)}`
         }
       }
     })
@@ -70,9 +77,9 @@ export default class extends Controller {
     const taxAmt   = subtotal * taxRate
     const total    = subtotal + taxAmt
 
-    if (this.hasSubtotalTarget)   this.subtotalTarget.textContent   = `€${subtotal.toFixed(2)}`
-    if (this.hasTaxAmountTarget)  this.taxAmountTarget.textContent  = `€${taxAmt.toFixed(2)}`
-    if (this.hasGrandTotalTarget) this.grandTotalTarget.textContent = `€${total.toFixed(2)}`
+    if (this.hasSubtotalTarget)   this.subtotalTarget.textContent   = `€${eur.format(subtotal)}`
+    if (this.hasTaxAmountTarget)  this.taxAmountTarget.textContent  = `€${eur.format(taxAmt)}`
+    if (this.hasGrandTotalTarget) this.grandTotalTarget.textContent = `€${eur.format(total)}`
   }
 
   scheduleSubmit() {

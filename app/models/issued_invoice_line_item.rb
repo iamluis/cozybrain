@@ -17,6 +17,16 @@ class IssuedInvoiceLineItem < ApplicationRecord
     super || (unit_amount_cents && BigDecimal(unit_amount_cents) / 100)
   end
 
+  # Comma-tolerant setters — a Spanish user typing "650,00" or "1,5" gets
+  # parsed correctly regardless of input locale.
+  def unit_amount=(val)
+    super(parse_decimal(val))
+  end
+
+  def quantity=(val)
+    super(parse_decimal(val))
+  end
+
   def total_cents
     (quantity * unit_amount_cents).round
   end
@@ -26,6 +36,15 @@ class IssuedInvoiceLineItem < ApplicationRecord
   end
 
   private
+
+  def parse_decimal(val)
+    return val if val.nil? || val.is_a?(Numeric)
+    cleaned = val.to_s.tr(",", ".")
+    return nil if cleaned.empty?
+    Float(cleaned)
+  rescue ArgumentError, TypeError
+    nil
+  end
 
   def sync_unit_amount_cents
     return if unit_amount.blank?

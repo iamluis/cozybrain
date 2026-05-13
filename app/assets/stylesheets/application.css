@@ -475,64 +475,69 @@ button { font: inherit; cursor: pointer; }
 .invoice__party-name { font-weight: 500; }
 .invoice__party-meta { color: var(--muted); font-size: 0.875rem; margin-top: 0.125rem; }
 
+/* Line items table: explicit column widths so headers align with cells.
+   Document-feel: no vertical rules, only a head underline + tight gutters. */
 .invoice__lines {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1rem;
+  table-layout: fixed;
+  margin-bottom: 0.5rem;
+  font-variant-numeric: tabular-nums;
 }
-.invoice__lines th {
-  text-align: left;
+.invoice__col-desc { width: auto; }
+.invoice__col-num  { width: 5.5rem; }
+.invoice__col-amt  { width: 6.5rem; }
+.invoice__col-rm   { width: 2rem; }
+
+.invoice__th {
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
-  padding: 0.5rem 0.5rem;
+  padding: 0 0.625rem 0.5rem;
   border-bottom: 1px solid var(--line);
+  white-space: nowrap;
 }
-.invoice__lines th.invoice__col-qty,
-.invoice__lines th.invoice__col-rate,
-.invoice__lines th.invoice__col-amt {
-  text-align: right;
-}
-.invoice__lines td {
-  padding: 0.625rem 0.5rem;
-  vertical-align: top;
-  font-size: 0.9375rem;
-  border-bottom: 1px solid var(--line);
-}
-.invoice__lines tfoot td { border-bottom: 0; padding-top: 1rem; }
-.invoice__line-amount,
-.invoice__total-amount {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.invoice__total-label  { text-align: right; color: var(--muted); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.invoice__total-amount { font-size: 1.25rem; font-weight: 500; }
+.invoice__th--desc { text-align: left;  padding-left: 0.5rem; }
+.invoice__th--num  { text-align: right; }
+.invoice__th--amt  { text-align: right; padding-right: 0; }
+.invoice__th--rm   { width: 2rem; padding: 0; }
 
+.invoice__cell {
+  padding: 0.5rem 0.625rem 0.5rem 0.5rem;
+  vertical-align: middle;
+}
+.invoice__cell:first-child { padding-left: 0; }
+.invoice__cell--num,
+.invoice__cell--amt { text-align: right; }
+/* Num cells: kill cell padding-right so the input's right edge sits flush
+   with the column edge; the input's own padding-right matches the header's,
+   so header text and input text share the same right edge. */
+.invoice__cell--num { padding-right: 0; }
+.invoice__cell--amt { padding-right: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
+.invoice__cell--rm  { padding: 0; text-align: right; width: 2rem; }
+
+/* Inputs sit in the cell flow — calm ash background, no border, right-aligned
+   for numeric columns. Same look as receipt edit fields. */
 .invoice__input {
   width: 100%;
   border: 0;
   background: #fafaf9;
   font: inherit;
   color: inherit;
-  padding: 0.375rem 0.5rem;
+  padding: 0.4375rem 0.625rem;
   border-radius: 0.25rem;
   text-align: inherit;
   box-shadow: inset 0 -1px 0 var(--line);
   transition: background-color 120ms ease, box-shadow 120ms ease;
+  box-sizing: border-box;
 }
 .invoice__input:hover { background: #f5f5f4; box-shadow: inset 0 -1px 0 var(--line-strong); }
 .invoice__input:focus { outline: 2px solid var(--ink); outline-offset: -1px; background: var(--surface); box-shadow: none; }
 .invoice__input::placeholder { color: var(--line-strong); }
-.invoice__input--qty,
-.invoice__input--rate { text-align: right; }
-.invoice__cents-hint  { color: var(--muted); font-size: 0.6875rem; margin-left: 0.25rem; }
-
-.invoice__rate-cell { display: flex; align-items: baseline; gap: 0.375rem; justify-content: flex-end; }
-.invoice__rate-cell .invoice__input--rate { flex: 0 0 6rem; }
-
-.invoice__col-rm { width: 2rem; }
+.invoice__input--num  { text-align: right; font-variant-numeric: tabular-nums; }
+.invoice__input--desc { text-align: left; }
 .invoice__line-remove { text-align: right; padding-left: 0.25rem; vertical-align: middle; }
 .invoice__remove {
   background: transparent;
@@ -629,13 +634,20 @@ button { font: inherit; cursor: pointer; }
   border: 0;
   border-bottom: 1px dashed transparent;
   padding: 0 0.125rem;
+  font-variant-numeric: tabular-nums;
+  position: relative;
 }
 .invoice__period-input:hover { border-bottom-color: var(--line-strong); }
 .invoice__period-input:focus { outline: none; border-bottom-color: var(--ink); }
-
-.invoice__rate-cell .invoice__rate-currency {
-  color: var(--muted);
-  font-size: 0.875rem;
+/* Hide the native calendar icon — clicking anywhere on the input opens the picker. */
+.invoice__period-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
 }
 
 .invoice__settings {
