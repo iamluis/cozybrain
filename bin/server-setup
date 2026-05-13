@@ -24,7 +24,9 @@ ssh "$REMOTE_HOST" "test -d $REMOTE_PATH/.git || git clone $REPO_URL $REMOTE_PAT
 
 echo "→ shipping config/master.key..."
 scp config/master.key "$REMOTE_HOST:$REMOTE_PATH/config/master.key"
-ssh "$REMOTE_HOST" "chmod 600 $REMOTE_PATH/config/master.key"
+# Container runs as UID 1000 (rails); chown so it can read the key.
+ssh "$REMOTE_HOST" "chown 1000:1000 $REMOTE_PATH/config/master.key && \
+                    chmod 600 $REMOTE_PATH/config/master.key"
 
 echo "→ preparing storage dir on the Hetzner volume..."
 ssh "$REMOTE_HOST" "mkdir -p /mnt/HC_Volume_105702184/brain && \
