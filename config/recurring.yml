@@ -1,15 +1,16 @@
 # Solid Queue recurring schedule.
 # Loaded by the Solid Queue supervisor in production; not active in dev/test
 # unless you run `bin/jobs` with the scheduler.
+#
+# Keep keys minimal — SolidQueue::RecurringTask in v1.4 only accepts
+# class, schedule, queue_name, priority, command, arguments. Extra keys
+# like description/timezone raise UnknownAttributeError at boot.
 
 production:
   weekly_pulse:
     class: WeeklyPulseJob
-    schedule: "0 8 * * 1"        # Monday 08:00, Europe/Madrid below
-    timezone: Europe/Madrid
-    description: "Monday-morning bookkeeping digest"
+    schedule: "0 8 * * 1"           # Monday 08:00 (server time)
 
   folder_sync:
     class: FolderSyncJob
-    schedule: "*/15 * * * *"     # every 15 minutes
-    description: "Mirror filings into the gestoría folder tree"
+    schedule: "every 15 minutes"
