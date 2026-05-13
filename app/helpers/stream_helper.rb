@@ -46,14 +46,13 @@ module StreamHelper
     end
   end
 
-  # Returns the inline meta parts (kind, locale, photo, matched, note) as
-  # an array; the view joins them with mono `·` separators.
+  # Returns the inline meta tags (kind, locale, photo, matched). The note
+  # is rendered separately — its actual text is already self-evident.
   def stream_entry_meta_parts(entry)
     parts = []
     parts << ledger_kind_label(entry).downcase
     parts << stream_entry_locale(entry) if stream_entry_locale(entry)
     parts << "photo"   if stream_entry_has_photo?(entry)
-    parts << "note"    if stream_entry_note(entry)
     parts << "matched" if entry.both_sides?
     parts
   end
