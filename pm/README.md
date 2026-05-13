@@ -40,9 +40,11 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0011 | edit-everything-inline     | 🟢 done        |
 | 0012 | invoice-real-fields        | 🟢 done        |
 | 0013 | stabilize-ui               | 🟡 in progress |
-| 0014 | weekly-pulse               | 🔴 not started |
-| 0015 | deployment-kamal           | 🔴 not started |
-| 0016 | folder-sync                | 🔴 not started |
-| 0017 | holded-adapter             | 🔴 not started |
+| 0014 | proof-ledger               | 🔴 next        |
+| 0015 | ledger-visual              | 🔴 after 0014  |
+| 0016 | weekly-pulse               | 🔴 not started |
+| 0017 | deployment-kamal           | 🔴 not started |
+| 0018 | folder-sync                | 🔴 not started |
+| 0019 | holded-adapter             | 🔴 not started |
 
 Later milestones are intentionally sketched, not specified. We refine them when we pick them up — speculation now is waste.
