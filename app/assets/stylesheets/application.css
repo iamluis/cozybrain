@@ -4,21 +4,30 @@
  */
 
 :root {
-  --bg:           #fafaf9;
+  /* Ledger palette — paper-warm neutrals + one umber accent.
+     See design-system.md for canonical tokens. */
+  --paper:        #f6f2e7;
+  --paper-deep:   #ece6d3;
   --surface:      #ffffff;
-  --ink:          #1c1917;
-  --muted:        #78716c;
-  --line:         #e7e5e4;
-  --line-strong:  #a8a29e;
-  --accent:       #1c1917;
-  --accent-fg:    #ffffff;
-  --positive:     #047857;
-  --positive-bg:  #ecfdf5;
-  --negative:     #9f1239;
-  --negative-bg:  #fff1f2;
+  --bg:           var(--paper);
+  --ink:          #1a1612;
+  --ink-soft:     #3a3128;
+  --muted:        #8a8377;
+  --line:         #e0d9c5;
+  --line-strong:  #b8af96;
 
-  --radius:    0.5rem;
-  --radius-lg: 0.75rem;
+  --accent:       #7a4f1f;   /* umber */
+  --accent-deep:  #5a3914;
+  --accent-soft:  #f0e6d3;
+  --accent-fg:    #fdfbf5;
+
+  --positive:     #2b6e3e;
+  --positive-bg:  #e1eedb;
+  --negative:     #9a3b1e;
+  --negative-bg:  #f7e3d4;
+
+  --radius:    0.25rem;     /* fewer rounded edges; this is a ledger, not a SaaS pill */
+  --radius-lg: 0.5rem;
   --max-w:     28rem;
   --gap:       1.25rem;
 
@@ -289,10 +298,10 @@ button { font: inherit; cursor: pointer; }
 }
 .shell__header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--line);
+  padding: 1.25rem 3rem 1rem;
+  border-bottom: 1px solid var(--line-strong);
   background: var(--bg);
   position: sticky;
   top: 0;
@@ -300,20 +309,23 @@ button { font: inherit; cursor: pointer; }
 }
 .shell__brand {
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   text-decoration: none;
-  color: inherit;
-  font-size: 1.125rem;
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
 }
 .shell__nav {
   display: none;
-  gap: 1.25rem;
-  align-items: center;
+  gap: 1.75rem;
+  align-items: baseline;
 }
 .shell__nav a {
   text-decoration: none;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  letter-spacing: -0.005em;
+  transition: color 0.12s;
 }
 .shell__nav a:hover,
 .shell__nav a.active {
@@ -447,26 +459,36 @@ button { font: inherit; cursor: pointer; }
 .invoice-history__amount { font-variant-numeric: tabular-nums; }
 
 /* Invoice document view */
+/* Invoice — a document, not a card. No rounded frame, no white surface
+   floating on paper. Just generous margins and thin rules between
+   sections. The page itself is the paper. */
 .invoice-page {
-  max-width: 42rem;
+  max-width: 44rem;
   margin: 0 auto;
-  padding: 2rem 1.25rem 6rem;
+  padding: 3rem 2rem 6rem;
 }
 .invoice {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 2.5rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  border-top:    1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  padding: 2.5rem 0;
 }
 .invoice__head {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: baseline;
   border-bottom: 1px solid var(--line);
   padding-bottom: 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
-.invoice__title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
+.invoice__title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
 .invoice__sub   { color: var(--muted); margin-top: 0.25rem; font-size: 0.9375rem; }
 
 .invoice__parties {
@@ -769,55 +791,55 @@ button { font: inherit; cursor: pointer; }
   text-align: right;
 }
 
-.entry__pill--sending { background: #fef3c7; color: #92400e; }
-.entry__pill--draft   { background: var(--line); color: var(--muted); }
-.entry__pill--approved { background: #dbeafe; color: #1e40af; }
+.entry__pill--sending  { color: var(--accent-deep); background: transparent; }
+.entry__pill--draft    { color: var(--muted); background: transparent; }
+.entry__pill--approved { color: var(--accent); background: transparent; }
 
 /* Home: stream + tray */
+/* Home — a ledger page, not a card collection.
+   Full-width on desktop; the stream gets the real estate, the tray sits
+   as a marginal column on the right, divided by a thin vertical rule. */
 .home {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
-  padding: 1rem 1.25rem 4rem;
-  max-width: 64rem;
+  gap: 2rem;
+  padding: 2rem 1.25rem 4rem;
+  max-width: 84rem;
   margin: 0 auto;
 }
-@media (min-width: 900px) {
+@media (min-width: 980px) {
   .home {
-    grid-template-columns: minmax(0, 1fr) 22rem;
-    gap: 2rem;
-    padding: 1.5rem 2rem 3rem;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 3.5rem;
+    padding: 3rem 3rem 4rem;
     align-items: start;
   }
   .home .stream { grid-column: 1; grid-row: 1; }
-  .home .tray   { grid-column: 2; grid-row: 1; position: sticky; top: 1.5rem; }
+  .home .tray   { grid-column: 2; grid-row: 1; position: sticky; top: 1.5rem;
+                  border-left: 1px solid var(--line); padding-left: 2rem; }
 }
 
-/* Stream */
-.stream__empty {
-  padding: 1rem 0;
-}
-.stream__days {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+/* Stream — ledger lines, not cards. Each day is a small caps heading;
+   each entry is one ledger row with mono numbers right-aligned. */
+.stream__empty { padding: 2rem 0; color: var(--muted); font-style: italic; }
+.stream__days  { display: flex; flex-direction: column; gap: 2.25rem; }
+
 .stream__day-label {
+  font-family: var(--mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
   color: var(--muted);
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.625rem;
   font-weight: 500;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line-strong);
 }
+
 .stream__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
 }
 .stream__row {
   border-bottom: 1px solid var(--line);
@@ -825,133 +847,155 @@ button { font: inherit; cursor: pointer; }
 .stream__row:last-child { border-bottom: 0; }
 .stream__entry {
   display: grid;
-  grid-template-columns: 3.5rem 1fr auto;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  align-items: flex-start;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  padding: 0.9375rem 0;
+  align-items: baseline;
   color: inherit;
   text-decoration: none;
 }
-.stream__entry--link { transition: background 0.1s; }
-.stream__entry--link:hover { background: var(--bg); }
+.stream__entry--link { transition: opacity 0.12s; }
+.stream__entry--link:hover { opacity: 1; background: var(--paper-deep); margin: 0 -0.75rem; padding-left: 0.75rem; padding-right: 0.75rem; }
 
-/* Tray */
+/* Entry internals — refined for ledger feel. */
+.entry__time {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+.entry__body { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.entry__title {
+  font-size: 1rem;
+  color: var(--ink);
+  font-weight: 450;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+.entry__meta { font-size: 0.8125rem; color: var(--muted); }
+
+.entry__right { display: flex; align-items: baseline; gap: 0.875rem; }
+.entry__amount {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.0625rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.entry__amount--negative { color: var(--ink); }
+.entry__amount--positive { color: var(--positive); }
+
+/* The "filed" pill is gone — being in the stream IS the filed state. */
+.stream .entry__pill { display: none; }
+
+/* Tray — marginal column. No box; just typography with a left rule
+   established by the .home grid. */
 .tray {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1rem 1rem 1.125rem;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
+  gap: 1.25rem;
 }
 .tray__header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line-strong);
 }
 .tray__title {
-  font-size: 0.8125rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 500;
   margin: 0;
 }
 .tray__count {
-  font-size: 0.8125rem;
+  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  background: var(--line);
-  padding: 0.0625rem 0.5rem;
-  border-radius: 999px;
-  min-width: 1.5rem;
-  text-align: center;
-}
-.tray__count[data-empty="true"] {
-  background: transparent;
-  color: var(--muted);
-}
-.tray__body { display: flex; flex-direction: column; gap: 0.75rem; }
-.tray__empty {
   font-size: 0.875rem;
-  color: var(--muted);
-  margin: 0;
-  padding: 0.5rem 0;
+  color: var(--ink);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  min-width: 0;
+  text-align: right;
 }
+.tray__count[data-empty="true"] { color: var(--muted); }
+
+.tray__body { display: flex; flex-direction: column; gap: 1.25rem; }
+.tray__empty { font-size: 0.875rem; color: var(--muted); margin: 0; font-style: italic; }
+
 .tray__list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 1.25rem;
 }
 .tray__row { margin: 0; }
+
+/* Tray item: no card, no rounded box. Just a small typographic block. */
 .tray__item {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.75rem 0.75rem 0.875rem;
-  border-radius: 0.5rem;
-  background: var(--bg);
-  border: 1px solid var(--line);
+  background: transparent;
+  border: 0;
+  padding: 0;
 }
-.tray__item-head {
-  display: flex;
-  flex-direction: column;
-  gap: 0.0625rem;
-  min-width: 0;
-}
+.tray__item-head { display: flex; flex-direction: column; gap: 0.1875rem; min-width: 0; }
 .tray__item-title {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--ink);
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: -0.005em;
 }
 .tray__item-from {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .tray__pills,
-.tray__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3125rem;
-}
+.tray__actions { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
 .tray__pill-form { margin: 0; padding: 0; display: inline; }
 .tray__pill {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  padding: 0.3125rem 0.625rem;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--line);
+  padding: 0.25rem 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.12s;
+  transition: border-color 0.12s, color 0.12s;
 }
-.tray__pill:hover { background: var(--line); }
+.tray__pill:hover { border-bottom-color: var(--accent); color: var(--accent-deep); }
+.tray__pill + .tray__pill { margin-left: 0.875rem; }
+.tray__pill--accent { color: var(--accent); }
 .tray__pill--send {
-  background: var(--positive-bg);
-  color: var(--positive);
-  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+  border: 0;
+  border-bottom: 1px solid var(--accent);
+  font-weight: 500;
 }
-.tray__pill--send:hover { filter: brightness(0.97); }
-.tray__pill--quiet { color: var(--muted); }
-.tray__hint {
-  margin: 0;
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-style: italic;
-}
+.tray__pill--send:hover { color: var(--accent-deep); border-bottom-color: var(--accent-deep); }
+.tray__pill--quiet { color: var(--muted); border-bottom-color: var(--line); }
+.tray__hint { margin: 0; font-size: 0.75rem; color: var(--muted); font-style: italic; }
 .tray__overflow {
   margin: 0.25rem 0 0;
   font-size: 0.75rem;
@@ -996,27 +1040,30 @@ button { font: inherit; cursor: pointer; }
 .entry__amount--negative { color: var(--ink); }
 .entry__amount--positive { color: var(--positive); }
 
+/* Status indicators read as typography, not as UI chips. Small caps,
+   letterspaced, no background pill. */
 .entry__pill {
+  font-family: var(--mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  padding: 0.125rem 0.5rem;
-  border-radius: 999px;
-  background: var(--line);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--muted);
-  text-transform: lowercase;
-  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
 }
 .entry__pill--filed,
 .entry__pill--matched,
 .entry__pill--paid,
 .entry__pill--sent {
-  background: var(--positive-bg);
   color: var(--positive);
+  background: transparent;
 }
 .entry__pill--needs_review,
 .entry__pill--unmatched {
-  background: #fef3c7;
-  color: #92400e;
+  color: var(--accent-deep);
+  background: transparent;
 }
 
 /* Landing */
@@ -1055,21 +1102,18 @@ button { font: inherit; cursor: pointer; }
 
 .shell__action {
   font-size: 0.875rem;
-  color: var(--ink);
+  color: var(--accent);
   text-decoration: none;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 0.25rem;
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--accent);
+  letter-spacing: -0.005em;
 }
-.shell__action:hover { background: var(--line); }
+.shell__action:hover { color: var(--accent-deep); border-bottom-color: var(--accent-deep); }
 .bottom-nav__action { color: var(--ink) !important; font-weight: 500; }
 
-.tray__pill--accent {
-  background: var(--ink);
-  color: var(--accent-fg);
-  border-color: transparent;
-}
-.tray__pill--accent:hover { filter: brightness(1.1); }
+/* .tray__pill--accent now inherits the underlined accent pill style from
+   .tray__pill — no special block-button treatment. */
 
 /* Match candidates page */
 .match__head { margin-bottom: 1rem; }

@@ -34,7 +34,11 @@ module StreamHelper
 
   def formatted_amount(cents)
     return nil if cents.nil?
-    sign = cents.negative? ? "-" : "+"
-    "#{sign}€#{format('%.2f', cents.abs / 100.0)}"
+    euros = cents.abs / 100.0
+    # Thousands separator via Rails helper; sign-and-currency manually for
+    # consistent placement: "−€23,455.00" / "+€8,000.00".
+    formatted = number_with_precision(euros, precision: 2, delimiter: ",")
+    sign = cents.negative? ? "−" : "+"   # real minus glyph for typographic feel
+    "#{sign}€#{formatted}"
   end
 end

@@ -38,8 +38,12 @@ module InvoicesHelper
   end
 
   # Display formatter (read-only): €1,234.56 with thousands separator.
+  # Negative values render with a real minus glyph in front of the €:
+  # "−€18.00", not "€−18.00".
   def display_money(value)
     return "—" if value.blank?
-    "€" + number_with_precision(value, precision: 2, delimiter: ",")
+    n = value.to_d
+    sign = n.negative? ? "−" : ""
+    "#{sign}€#{number_with_precision(n.abs, precision: 2, delimiter: ',')}"
   end
 end

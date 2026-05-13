@@ -41,7 +41,7 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0012 | invoice-real-fields        | 🟢 done        |
 | 0013 | stabilize-ui               | 🟡 in progress |
 | 0014 | proof-ledger               | 🔴 next        |
-| 0015 | ledger-visual              | 🔴 after 0014  |
+| 0015 | ledger-visual              | 🟡 in progress |
 | 0016 | weekly-pulse               | 🔴 not started |
 | 0017 | deployment-kamal           | 🔴 not started |
 | 0018 | folder-sync                | 🔴 not started |
