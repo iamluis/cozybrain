@@ -16,6 +16,7 @@ class IssuedInvoice < ApplicationRecord
 
   before_validation :sync_period_from_service_period
   before_validation :normalize_blank_tax_treatment
+  before_validation :renumber_line_items
   after_update :sync_filing_period,
                if: -> { saved_change_to_service_period_end? || saved_change_to_service_period_start? }
 
@@ -145,6 +146,16 @@ class IssuedInvoice < ApplicationRecord
 
   def normalize_blank_tax_treatment
     self.tax_treatment = nil if tax_treatment.blank?
+  end
+
+  # Re-sequence line item positions so newly-added rows don't collide on
+  # the (issued_invoice_id, position) uniqueness scope. The form template
+  # hardcodes position=99 for new rows; adding two in a row used to fail
+  # validation silently.
+  def renumber_line_items
+    line_items.reject(&:marked_for_destruction?).each_with_index do |li, i|
+      li.position = i + 1
+    end
   end
 
   def sync_period_from_service_period

@@ -57,6 +57,29 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to invoice_path(draft)
   end
 
+  test "update can add multiple new lines in one submit (positions are renumbered)" do
+    # The form template hardcodes position=99 for every new row, so two
+    # new rows in one submit used to collide on the position-uniqueness
+    # scope. before_validation :renumber_line_items handles it.
+    draft = issued_invoices(:lab900_may_draft)
+    existing_line = issued_invoice_line_items(:may_consulting_draft)
+
+    assert_difference -> { draft.line_items.reload.count } => 2 do
+      patch invoice_path(draft), params: {
+        issued_invoice: {
+          line_items_attributes: {
+            "0" => { id: existing_line.id, position: existing_line.position, description: existing_line.description, quantity: existing_line.quantity.to_s, unit_amount_cents: existing_line.unit_amount_cents, _destroy: "0" },
+            "1718000000000" => { id: "", position: "99", description: "Travel", quantity: "1.0", unit_amount_cents: "12000", _destroy: "0" },
+            "1718000000001" => { id: "", position: "99", description: "Hotel",  quantity: "1.0", unit_amount_cents: "18000", _destroy: "0" }
+          }
+        }
+      }
+    end
+
+    positions = draft.line_items.reload.pluck(:position).sort
+    assert_equal [ 1, 2, 3 ], positions
+  end
+
   test "update can remove a line item via _destroy" do
     draft = issued_invoices(:lab900_may_draft)
     line  = issued_invoice_line_items(:may_consulting_draft)
