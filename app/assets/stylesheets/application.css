@@ -21,6 +21,16 @@
   --radius-lg: 0.75rem;
   --max-w:     28rem;
   --gap:       1.25rem;
+
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* Numeric utility — every money/quantity/date/reference uses mono.
+   Tabular figures so columns of numbers align by glyph. */
+.num,
+[data-num] {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -1038,3 +1048,90 @@ button { font: inherit; cursor: pointer; }
 .landing__cta {
   margin-top: 1rem;
 }
+
+/* 0014 — proof-ledger components.
+   These are functional styles for the new tray rows + match UI.
+   The full design-system pass (0015) will retheme these. */
+
+.shell__action {
+  font-size: 0.875rem;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.25rem;
+}
+.shell__action:hover { background: var(--line); }
+.bottom-nav__action { color: var(--ink) !important; font-weight: 500; }
+
+.tray__pill--accent {
+  background: var(--ink);
+  color: var(--accent-fg);
+  border-color: transparent;
+}
+.tray__pill--accent:hover { filter: brightness(1.1); }
+
+/* Match candidates page */
+.match__head { margin-bottom: 1rem; }
+.match__title { font-size: 1.5rem; margin: 0 0 0.25rem; }
+.match__sub {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.match__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.match__row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.match__row:last-child { border-bottom: 0; }
+.match__row-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+.match__row-title {
+  font-size: 0.9375rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.match__row-meta {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.match__row-form { margin: 0; display: inline; }
+.match__empty { padding: 1rem 0; }
+.match__meta { margin-top: 1rem; font-size: 0.8125rem; color: var(--muted); }
+.match__back { margin-top: 1.5rem; }
+.match__dismiss-form { display: inline; margin: 0; padding: 0; }
+
+.button--small {
+  font-size: 0.8125rem;
+  padding: 0.4375rem 0.75rem;
+}
+.button--inline {
+  display: inline;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.button--inline:hover { color: var(--ink); }

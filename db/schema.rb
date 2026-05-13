@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_070827) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_110556) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -53,10 +53,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_070827) do
     t.datetime "created_at", null: false
     t.string "currency", default: "EUR", null: false
     t.string "description"
+    t.datetime "dismissed_at"
     t.string "holded_ref", null: false
     t.integer "matched_filing_id"
     t.date "posted_on", null: false
     t.datetime "updated_at", null: false
+    t.index ["dismissed_at"], name: "index_bank_transactions_on_dismissed_at"
     t.index ["holded_ref"], name: "index_bank_transactions_on_holded_ref", unique: true
     t.index ["matched_filing_id"], name: "index_bank_transactions_on_matched_filing_id"
     t.index ["posted_on"], name: "index_bank_transactions_on_posted_on"

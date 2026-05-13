@@ -1,0 +1,14 @@
+<% target = entry.proof_side || entry.money_side %>
+<div class="tray__item tray__item--other">
+  <div class="tray__item-head">
+    <span class="tray__item-title">
+      <%= ledger_kind_label(entry) %>
+    </span>
+    <span class="tray__item-from">
+      <%= ledger_state_label(entry) %>
+      <% if entry.amount %>
+        · <span class="num"><%= display_money(entry.amount.abs) %></span>
+      <% end %>
+    </span>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<% case entry.open_reason %>
+<% when :needs_proof %>
+  <%= render "tray_match_bank", entry: entry %>
+<% when :needs_send %>
+  <%= render "tray_draft_invoice", invoice: entry.proof_side.filable %>
+<% when :needs_review %>
+  <%= render "tray_inbound_doc", filing: entry.proof_side %>
+<% else %>
+  <%= render "tray_other", entry: entry %>
+<% end %>

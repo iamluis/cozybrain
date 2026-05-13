@@ -1,0 +1,16 @@
+<% txn = entry.money_side %>
+<div class="tray__item tray__item--bank">
+  <div class="tray__item-head">
+    <span class="tray__item-title">
+      <%= txn.description.presence || "Bank transaction" %>
+    </span>
+    <span class="tray__item-from">
+      <span class="num"><%= I18n.l(txn.posted_on, format: "%-d %b") %></span> ·
+      <span class="num"><%= display_money(BigDecimal(txn.amount_cents) / 100) %></span>
+    </span>
+  </div>
+
+  <div class="tray__actions">
+    <%= link_to "Match a receipt", new_ledger_match_path(bank_transaction_id: txn.id), class: "tray__pill tray__pill--accent" %>
+  </div>
+</div>

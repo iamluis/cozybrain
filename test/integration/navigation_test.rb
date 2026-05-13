@@ -27,8 +27,8 @@ class NavigationTest < ActionDispatch::IntegrationTest
     assert_select "nav.bottom-nav"
     assert_select "header.shell__header a.shell__brand", text: "brain"
     assert_select "header.shell__header a", text: "Home"
-    assert_select "header.shell__header a", text: "Capture"
     assert_select "header.shell__header a", text: "Invoices"
+    assert_select "header.shell__header a", text: "+ Receipt"
     assert_select "form[action=?][method=?]", session_path, "post" do
       assert_select "input[name='_method'][value='delete']"
       assert_select "button.shell__signout", text: "Sign out"

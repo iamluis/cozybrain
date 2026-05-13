@@ -1,20 +1,12 @@
-<% target = stream_event_target(event) %>
-<li class="stream__row" id="stream_event_<%= event.is_a?(Filing) ? "f#{event.id}" : "t#{event.id}" %>">
+<% target = stream_entry_target(entry) %>
+<li class="stream__row" id="stream_entry_<%= entry.proof_side ? "f#{entry.proof_side.id}" : "t#{entry.money_side.id}" %>">
   <% if target.present? %>
     <%= link_to target, class: "stream__entry stream__entry--link" do %>
-      <% if event.is_a?(Filing) %>
-        <%= render "homes/stream_filing_entry", filing: event %>
-      <% else %>
-        <%= render "homes/stream_bank_transaction_entry", txn: event %>
-      <% end %>
+      <%= render "stream_entry_body", entry: entry %>
     <% end %>
   <% else %>
     <div class="stream__entry">
-      <% if event.is_a?(Filing) %>
-        <%= render "homes/stream_filing_entry", filing: event %>
-      <% else %>
-        <%= render "homes/stream_bank_transaction_entry", txn: event %>
-      <% end %>
+      <%= render "stream_entry_body", entry: entry %>
     </div>
   <% end %>
 </li>

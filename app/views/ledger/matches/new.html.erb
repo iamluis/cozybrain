@@ -1,0 +1,64 @@
+<% content_for :title, "Match a receipt" %>
+
+<div class="page stack">
+  <header class="match__head">
+    <h1 class="match__title">Match a receipt</h1>
+    <p class="match__sub">
+      <span class="num"><%= @txn.description.presence || "Bank transaction" %></span>
+      ·
+      <span class="num"><%= I18n.l(@txn.posted_on, format: "%-d %b %Y") %></span>
+      ·
+      <span class="num"><%= display_money(BigDecimal(@txn.amount_cents) / 100) %></span>
+    </p>
+  </header>
+
+  <% if @candidates.empty? %>
+    <p class="match__empty card__meta">
+      No receipts within ±€5 and ±7 days. Capture one first, or
+      <%= button_to "dismiss this charge",
+            ledger_dismissals_path,
+            method: :post,
+            params: { bank_transaction_id: @txn.id },
+            form: { class: "match__dismiss-form" },
+            class: "button button--quiet button--inline" %>.
+    </p>
+  <% else %>
+    <ul class="match__list">
+      <% @candidates.each do |filing| %>
+        <li class="match__row">
+          <div class="match__row-body">
+            <span class="match__row-title">
+              <%= filing.filable.try(:vendor).presence ||
+                  filing.filable.try(:subject).presence ||
+                  filing.filable_type %>
+            </span>
+            <span class="match__row-meta num">
+              <%= I18n.l(filing.received_at.to_date, format: "%-d %b") %>
+              ·
+              <%= display_money(BigDecimal(filing.filable.amount_cents) / 100) %>
+            </span>
+          </div>
+          <%= button_to "Match",
+                ledger_matches_path,
+                method: :post,
+                params: { bank_transaction_id: @txn.id, filing_id: filing.id },
+                form: { class: "match__row-form" },
+                class: "button button--primary button--small" %>
+        </li>
+      <% end %>
+    </ul>
+
+    <p class="match__meta">
+      <%= button_to "Dismiss this charge (it's not business)",
+            ledger_dismissals_path,
+            method: :post,
+            params: { bank_transaction_id: @txn.id },
+            form: { class: "match__dismiss-form" },
+            class: "button button--quiet button--inline" %>
+    </p>
+  <% end %>
+
+  <p class="match__back">
+    <%= link_to "← back to home", home_path %>
+  </p>
+</div>

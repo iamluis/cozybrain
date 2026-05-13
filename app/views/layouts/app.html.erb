@@ -8,9 +8,9 @@
       <header class="shell__header">
         <%= link_to "brain", home_path, class: "shell__brand" %>
         <nav class="shell__nav" aria-label="Primary">
-          <%= link_to "Home",     home_path,        class: ("active" if current_page?(home_path)) %>
-          <%= link_to "Capture",  new_receipt_path, class: ("active" if current_page?(new_receipt_path)) %>
-          <%= link_to "Invoices", invoices_path,    class: ("active" if request.path.start_with?(invoices_path)) %>
+          <%= link_to "Home",     home_path,     class: ("active" if current_page?(home_path)) %>
+          <%= link_to "Invoices", invoices_path, class: ("active" if request.path.start_with?(invoices_path)) %>
+          <%= link_to "+ Receipt", new_receipt_path, class: "shell__action" %>
           <%= button_to "Sign out", session_path, method: :delete, class: "shell__signout", form: { class: "shell__signout-form" } %>
         </nav>
       </header>
@@ -30,8 +30,8 @@
         <%= link_to home_path, class: ("active" if current_page?(home_path)) do %>
           <span>Home</span>
         <% end %>
-        <%= link_to new_receipt_path, class: ("active" if current_page?(new_receipt_path)) do %>
-          <span>Capture</span>
+        <%= link_to new_receipt_path, class: "bottom-nav__action" do %>
+          <span>+ Receipt</span>
         <% end %>
         <%= link_to invoices_path, class: ("active" if request.path.start_with?(invoices_path)) do %>
           <span>Invoices</span>

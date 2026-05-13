@@ -1,11 +1,10 @@
-<% invoice = item %>
 <div class="tray__item tray__item--invoice">
   <div class="tray__item-head">
     <span class="tray__item-title">
-      Draft invoice · <%= invoice.client_name %>
+      Draft invoice · <%= invoice.display_client_name %>
     </span>
     <span class="tray__item-from">
-      <%= invoice.period_label %> · €<%= number_with_precision(invoice.total, precision: 2, delimiter: ",") %>
+      <%= invoice.period_label %> · <span class="num"><%= display_money(invoice.total) %></span>
     </span>
   </div>
 

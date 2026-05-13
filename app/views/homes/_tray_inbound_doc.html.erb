@@ -1,5 +1,4 @@
-<% filing = item %>
-<% doc    = filing.filable %>
+<% doc = filing.filable %>
 <div class="tray__item tray__item--inbound">
   <div class="tray__item-head">
     <span class="tray__item-title"><%= doc.subject.presence || "Inbound document" %></span>

@@ -8,57 +8,32 @@ module StreamHelper
     end
   end
 
-  def stream_time_of(event)
-    timestamp = event.is_a?(Filing) ? event.received_at : nil
-    timestamp&.strftime("%H:%M")
+  # Time-of-day for an entry's proof side; "—" for bank-only entries.
+  def stream_entry_time(entry)
+    entry.proof_side&.received_at&.strftime("%H:%M") || "—"
   end
 
-  def stream_amount(event)
-    cents = signed_cents(event)
-    cents && formatted_amount(cents)
+  def stream_entry_amount(entry)
+    formatted_amount(entry.amount_cents)
   end
 
-  def stream_amount_class(event)
-    cents = signed_cents(event)
+  def stream_entry_amount_class(entry)
+    cents = entry.amount_cents
     return nil if cents.nil?
     cents.negative? ? "entry__amount entry__amount--negative" : "entry__amount entry__amount--positive"
   end
 
-  def stream_amount_for_bank(txn)
-    formatted_amount(txn.amount_cents)
-  end
-
-  def stream_event_target(event)
-    return nil unless event.is_a?(Filing)
-    case event.filable
-    when Receipt        then receipt_path(event.filable)
-    when IssuedInvoice  then invoice_path(event.filable)
-    end
-  end
-
-  def tray_partial_for(item)
-    case item
-    when Filing          then "homes/tray_inbound_doc"
-    when IssuedInvoice   then "homes/tray_draft_invoice"
-    when BankTransaction then "homes/tray_unmatched_transaction"
+  def stream_entry_target(entry)
+    case entry.proof_side&.filable
+    when Receipt       then receipt_path(entry.proof_side.filable)
+    when IssuedInvoice then invoice_path(entry.proof_side.filable)
     end
   end
 
   private
 
-  def signed_cents(event)
-    case event
-    when Filing
-      case event.filable
-      when Receipt       then -event.filable.amount_cents
-      when IssuedInvoice then event.filable.amount_cents
-      end
-    when BankTransaction
-      event.amount_cents
-    end
-  end
-
   def formatted_amount(cents)
+    return nil if cents.nil?
     sign = cents.negative? ? "-" : "+"
     "#{sign}€#{format('%.2f', cents.abs / 100.0)}"
   end
