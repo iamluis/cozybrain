@@ -35,10 +35,8 @@
           <li class="invoices__row">
             <%= link_to invoice_path(invoice), class: "invoices__entry" do %>
               <span class="invoices__number num">#<%= invoice.number %></span>
-              <span class="invoices__client">
-                <%= invoice.display_client_name %>
-                <span class="invoices__period num">· <%= invoice.period_label %></span>
-              </span>
+              <span class="invoices__client"><%= invoice.display_client_name %></span>
+              <span class="invoices__period num"><%= invoice.period_label %></span>
               <span class="invoices__amount num"><%= display_money(BigDecimal(invoice.amount_cents) / 100) %></span>
               <span class="entry__pill entry__pill--<%= invoice.invoice_status %>"><%= invoice.invoice_status %></span>
             <% end %>
