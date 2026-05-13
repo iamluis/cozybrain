@@ -79,6 +79,19 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", edit_receipt_path(receipt), text: "Edit"
   end
 
+  test "show renders the photo when one is attached" do
+    sign_in_as(@user)
+    receipt = receipts(:lab900_dinner)
+    receipt.original_photo.attach(
+      io:           File.open(Rails.root.join("test/fixtures/files/sample_receipt.png")),
+      filename:     "receipt.png",
+      content_type: "image/png"
+    )
+
+    get receipt_path(receipt)
+    assert_select "a.card__photo img.card__photo-img"
+  end
+
   test "edit renders the form with current values" do
     sign_in_as(@user)
     receipt = receipts(:lab900_dinner)

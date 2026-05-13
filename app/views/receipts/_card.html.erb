@@ -1,12 +1,21 @@
 <div class="card">
-  <div class="card__amount">
+  <% if receipt.original_photo.attached? %>
+    <%= link_to receipt.original_photo, target: "_blank", rel: "noopener", class: "card__photo" do %>
+      <%= image_tag receipt.original_photo,
+            alt: "Receipt photo",
+            class: "card__photo-img",
+            loading: "lazy" %>
+    <% end %>
+  <% end %>
+
+  <div class="card__amount num">
     €<%= number_with_precision(receipt.amount_cents / 100.0, precision: 2) %>
   </div>
   <div>
     <%= receipt.vendor.presence || tag.span("(no vendor)", class: "card__meta") %>
   </div>
   <div class="card__meta">
-    <%= l(receipt.paid_on, format: :long) %><% if receipt.country.present? %> · <%= receipt.country %><% end %>
+    <span class="num"><%= l(receipt.paid_on, format: :long) %></span><% if receipt.country.present? %> · <%= receipt.country %><% end %>
   </div>
   <% if receipt.filing.note.present? %>
     <div class="card__note">"<%= receipt.filing.note %>"</div>

@@ -2,6 +2,17 @@
 
 <div class="page stack">
   <h1 class="page__title">Edit receipt</h1>
+
+  <% if @receipt.original_photo.attached? %>
+    <%= link_to @receipt.original_photo, target: "_blank", rel: "noopener", class: "edit-photo" do %>
+      <%= image_tag @receipt.original_photo,
+            alt: "Receipt photo",
+            class: "edit-photo__img",
+            loading: "lazy" %>
+      <span class="edit-photo__hint">Tap to open</span>
+    <% end %>
+  <% end %>
+
   <%= render "form",
         receipt: @receipt,
         form_url: receipt_path(@receipt),
