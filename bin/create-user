@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# bin/create-user — create or update a User on the deployed box.
+#
+# Prompts for email + password (password is hidden as you type), then
+# runs the users:create rake task inside the running container.
+# Idempotent — if the email already exists, the password is updated.
+set -euo pipefail
+
+REMOTE_HOST="brain"
+REMOTE_PATH="/opt/brain"
+
+read -r -p "Email: " EMAIL
+read -r -s -p "Password: " PASSWORD
+echo
+
+ssh "$REMOTE_HOST" \
+  "cd $REMOTE_PATH && \
+   docker compose exec -T \
+     -e USER_EMAIL='$EMAIL' \
+     -e USER_PASSWORD='$PASSWORD' \
+     app bin/rails users:create"
