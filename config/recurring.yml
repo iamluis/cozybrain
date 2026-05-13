@@ -1,10 +1,6 @@
 # Solid Queue recurring schedule.
-# Loaded by the Solid Queue supervisor in production; not active in dev/test
-# unless you run `bin/jobs` with the scheduler.
-#
-# Keep keys minimal — SolidQueue::RecurringTask in v1.4 only accepts
-# class, schedule, queue_name, priority, command, arguments. Extra keys
-# like description/timezone raise UnknownAttributeError at boot.
+# Loaded by the Solid Queue supervisor in production; not active in
+# dev/test unless you run `bin/jobs` with the scheduler.
 
 production:
   weekly_pulse:
@@ -13,4 +9,8 @@ production:
 
   folder_sync:
     class: FolderSyncJob
-    schedule: "every 15 minutes"
+    schedule: every 15 minutes
+
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
