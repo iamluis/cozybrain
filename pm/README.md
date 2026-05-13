@@ -45,6 +45,6 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0016 | weekly-pulse               | 🟢 done        |
 | 0017 | deployment-kamal           | ⏸️ blocked (needs host)  |
 | 0018 | folder-sync                | 🟢 done        |
-| 0019 | holded-adapter             | 🟡 next        |
+| 0019 | holded-adapter             | ⏸️ blocked (needs API access + 0017) |
 
 Later milestones are intentionally sketched, not specified. We refine them when we pick them up — speculation now is waste.
