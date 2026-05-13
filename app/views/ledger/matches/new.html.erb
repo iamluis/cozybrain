@@ -1,35 +1,38 @@
 <% content_for :title, "Match a receipt" %>
 
-<div class="page stack">
+<div class="match-page">
+  <p class="match__back">
+    <%= link_to "← Home", home_path, class: "match__back-link" %>
+  </p>
+
   <header class="match__head">
     <h1 class="match__title">Match a receipt</h1>
-    <p class="match__sub">
+    <div class="match__sub">
       <span class="num"><%= @txn.description.presence || "Bank transaction" %></span>
-      ·
+      <span class="match__sep">·</span>
       <span class="num"><%= I18n.l(@txn.posted_on, format: "%-d %b %Y") %></span>
-      ·
+      <span class="match__sep">·</span>
       <span class="num"><%= display_money(BigDecimal(@txn.amount_cents) / 100) %></span>
-    </p>
+    </div>
   </header>
 
   <% if @candidates.empty? %>
-    <p class="match__empty card__meta">
+    <p class="match__empty">
       No receipts within ±€5 and ±7 days. Capture one first, or
       <%= button_to "dismiss this charge",
             ledger_dismissals_path,
             method: :post,
             params: { bank_transaction_id: @txn.id },
             form: { class: "match__dismiss-form" },
-            class: "button button--quiet button--inline" %>.
+            class: "button--inline" %>.
     </p>
   <% else %>
+    <h2 class="match__section-label">Candidates</h2>
     <ul class="match__list">
       <% @candidates.each do |filing| %>
         <li class="match__row">
           <div class="match__row-body">
-            <span class="match__row-title">
-              <%= filing_title(filing) %>
-            </span>
+            <span class="match__row-title"><%= filing_title(filing) %></span>
             <span class="match__row-meta num">
               <%= I18n.l(filing.received_at.to_date, format: "%-d %b") %>
               ·
@@ -41,22 +44,18 @@
                 method: :post,
                 params: { bank_transaction_id: @txn.id, filing_id: filing.id },
                 form: { class: "match__row-form" },
-                class: "button button--primary button--small" %>
+                class: "match__match-btn" %>
         </li>
       <% end %>
     </ul>
 
     <p class="match__meta">
-      <%= button_to "Dismiss this charge (it's not business)",
+      <%= button_to "Dismiss this charge — it's not business",
             ledger_dismissals_path,
             method: :post,
             params: { bank_transaction_id: @txn.id },
             form: { class: "match__dismiss-form" },
-            class: "button button--quiet button--inline" %>
+            class: "button--inline button--inline--muted" %>
     </p>
   <% end %>
-
-  <p class="match__back">
-    <%= link_to "← back to home", home_path %>
-  </p>
 </div>
