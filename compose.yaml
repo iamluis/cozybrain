@@ -18,7 +18,10 @@ services:
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
     volumes:
-      - brain_storage:/rails/storage
+      # SQLite files + Active Storage blobs land on the Hetzner volume
+      # (10GB, separate disk from the root). Mount path comes from fstab:
+      # /dev/disk/by-id/scsi-0HC_Volume_105702184 → /mnt/HC_Volume_105702184
+      - /mnt/HC_Volume_105702184/brain:/rails/storage
       - ./config/master.key:/rails/config/master.key:ro
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost/up"]
@@ -26,6 +29,3 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-
-volumes:
-  brain_storage:
