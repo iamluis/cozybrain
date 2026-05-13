@@ -42,8 +42,8 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0013 | stabilize-ui               | 🟢 done        |
 | 0014 | proof-ledger               | 🟢 done        |
 | 0015 | ledger-visual              | 🟢 done        |
-| 0016 | weekly-pulse               | 🟡 next        |
-| 0017 | deployment-kamal           | 🔴 not started |
+| 0016 | weekly-pulse               | 🟢 done        |
+| 0017 | deployment-kamal           | 🟡 next        |
 | 0018 | folder-sync                | 🔴 not started |
 | 0019 | holded-adapter             | 🔴 not started |
 

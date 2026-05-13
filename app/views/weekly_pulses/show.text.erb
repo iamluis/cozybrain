@@ -1,0 +1,32 @@
+WEEKLY PULSE
+<%= @pulse.period_label %>
+
+<% if @pulse.empty? -%>
+Nothing moved this week.
+
+<% else -%>
+<% if @pulse.money_in_cents.positive? -%>
+MONEY IN — <%= display_money(BigDecimal(@pulse.money_in_cents) / 100) %>
+<% @pulse.income_entries.each do |entry| -%>
+  <%= stream_entry_title(entry) %> · <%= display_money(entry.amount.abs) %>
+<% end -%>
+
+<% end -%>
+<% if @pulse.money_out_cents.positive? -%>
+MONEY OUT — <%= display_money(BigDecimal(@pulse.money_out_cents) / 100) %>
+<% @pulse.money_out_by_kind.each do |kind, cents| -%>
+  <%= ledger_kind_label_word(kind) %> · <%= display_money(BigDecimal(cents) / 100) %>
+<% end -%>
+
+<% end -%>
+<% if @pulse.needs_attention.any? -%>
+NEEDS ATTENTION — <%= @pulse.needs_attention_count %>
+<% @pulse.needs_attention.first(10).each do |entry| -%>
+  <%= stream_entry_title(entry) %> — <%= ledger_state_label(entry).downcase %>
+<% end -%>
+
+<% end -%>
+MONTH SO FAR
+  Income   · <%= display_money(BigDecimal(@pulse.mtd_income_cents) / 100) %>
+  Expenses · <%= display_money(BigDecimal(@pulse.mtd_expense_cents) / 100) %>
+<% end -%>

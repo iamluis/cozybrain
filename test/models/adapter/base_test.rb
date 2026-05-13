@@ -8,7 +8,7 @@ class Adapter::BaseTest < ActiveSupport::TestCase
   end
 
   test "Null::Notifier returns output matching port shape" do
-    output = Adapter::Null::Notifier.call("recipient" => "x@x", "subject" => "s", "body_text" => "t")
+    output = Adapter::Null::Notifier.call("recipient" => "x@x", "subject" => "s", "body_text" => "t", "body_html" => "<p>t</p>")
     assert output["delivered_at"].is_a?(String)
     assert output["provider_message_id"].is_a?(String)
   end

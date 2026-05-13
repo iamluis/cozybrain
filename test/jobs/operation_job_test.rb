@@ -5,7 +5,7 @@ class OperationJobTest < ActiveJob::TestCase
     op = Operation.create!(
       kind: "send_notification",
       adapter_name: Adapter::Null::Notifier.name,
-      input: { "recipient" => "x@x", "subject" => "S", "body_text" => "T" },
+      input: { "recipient" => "x@x", "subject" => "S", "body_text" => "T", "body_html" => "<p>T</p>" },
       max_attempts: 3
     )
 

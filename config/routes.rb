@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   resources :invoices, only: [ :index, :show, :create, :update ] do
     member { post :send_to_client }
   end
-  resource :home, only: :show
+  resource :home,  only: :show
+  resource :pulse, only: :show, controller: :weekly_pulses
   post "tray/inbound_docs/:filing_id/classify", to: "tray#classify", as: :tray_classify
 
   # Bank-tx ↔ Filing matching. `new` shows the candidate receipts;

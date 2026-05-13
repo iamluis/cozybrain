@@ -1,0 +1,75 @@
+<% content_for :title, "Weekly pulse" %>
+
+<div class="pulse-page">
+  <header class="pulse__head">
+    <h1 class="pulse__title">Weekly pulse</h1>
+    <p class="pulse__sub num"><%= @pulse.period_label %></p>
+  </header>
+
+  <% if @pulse.empty? %>
+    <p class="pulse__empty">Nothing moved this week. Quiet.</p>
+  <% else %>
+    <% if @pulse.money_in_cents.positive? %>
+      <section class="pulse__section">
+        <h2 class="pulse__section-label">Money in</h2>
+        <div class="pulse__total num">
+          <%= display_money(BigDecimal(@pulse.money_in_cents) / 100) %>
+        </div>
+        <% if @pulse.income_entries.any? %>
+          <ul class="pulse__list">
+            <% @pulse.income_entries.each do |entry| %>
+              <li class="pulse__line">
+                <span class="pulse__line-title"><%= stream_entry_title(entry) %></span>
+                <span class="pulse__line-amount num"><%= display_money(entry.amount.abs) %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </section>
+    <% end %>
+
+    <% if @pulse.money_out_cents.positive? %>
+      <section class="pulse__section">
+        <h2 class="pulse__section-label">Money out</h2>
+        <div class="pulse__total num">
+          <%= display_money(BigDecimal(@pulse.money_out_cents) / 100) %>
+        </div>
+        <% @pulse.money_out_by_kind.each do |kind, cents| %>
+          <div class="pulse__bucket">
+            <span class="pulse__bucket-label"><%= ledger_kind_label_word(kind) %></span>
+            <span class="pulse__bucket-amount num"><%= display_money(BigDecimal(cents) / 100) %></span>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <% if @pulse.needs_attention.any? %>
+      <section class="pulse__section">
+        <h2 class="pulse__section-label">Needs attention · <span class="num"><%= @pulse.needs_attention_count %></span></h2>
+        <ul class="pulse__list">
+          <% @pulse.needs_attention.first(10).each do |entry| %>
+            <li class="pulse__line">
+              <span class="pulse__line-title"><%= stream_entry_title(entry) %></span>
+              <span class="pulse__line-reason"><%= ledger_state_label(entry).downcase %></span>
+            </li>
+          <% end %>
+        </ul>
+        <% if @pulse.needs_attention_count > 10 %>
+          <p class="pulse__overflow">+ <%= @pulse.needs_attention_count - 10 %> more in the tray.</p>
+        <% end %>
+      </section>
+    <% end %>
+
+    <section class="pulse__section pulse__section--mtd">
+      <h2 class="pulse__section-label">Month so far</h2>
+      <div class="pulse__bucket">
+        <span class="pulse__bucket-label">Income</span>
+        <span class="pulse__bucket-amount num"><%= display_money(BigDecimal(@pulse.mtd_income_cents) / 100) %></span>
+      </div>
+      <div class="pulse__bucket">
+        <span class="pulse__bucket-label">Expenses</span>
+        <span class="pulse__bucket-amount num"><%= display_money(BigDecimal(@pulse.mtd_expense_cents) / 100) %></span>
+      </div>
+    </section>
+  <% end %>
+</div>

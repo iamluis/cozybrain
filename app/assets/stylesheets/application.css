@@ -1463,3 +1463,65 @@ textarea.invoice__settings-input {
   font-size: 0.6875rem;
   color: var(--muted);
 }
+
+/* Weekly pulse — the digest page, also rendered into the email. */
+.pulse-page {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+.pulse__head {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: 2rem;
+}
+.pulse__title { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; }
+.pulse__sub   { font-size: 0.875rem; color: var(--muted); margin-top: 0.25rem; }
+.pulse__empty { color: var(--muted); font-style: italic; padding: 1.5rem 0; }
+.pulse__section { margin-bottom: 2.25rem; }
+.pulse__section--mtd { padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.pulse__section-label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 0 0 0.625rem;
+}
+.pulse__total {
+  font-size: 1.875rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+.pulse__bucket {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.375rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.pulse__bucket:last-child { border-bottom: 0; }
+.pulse__bucket-label { font-size: 0.9375rem; color: var(--ink-soft); }
+.pulse__bucket-amount { font-size: 0.9375rem; }
+.pulse__list { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.pulse__line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.375rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.pulse__line:last-child { border-bottom: 0; }
+.pulse__line-title { font-size: 0.9375rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.pulse__line-amount { font-size: 0.9375rem; }
+.pulse__line-reason {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.pulse__overflow { margin-top: 0.5rem; font-size: 0.8125rem; color: var(--muted); }

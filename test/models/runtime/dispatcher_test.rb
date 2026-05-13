@@ -27,7 +27,7 @@ class Runtime::DispatcherTest < ActiveSupport::TestCase
   end
 
   def valid_input
-    { "recipient" => "x@example.com", "subject" => "S", "body_text" => "T" }
+    { "recipient" => "x@example.com", "subject" => "S", "body_text" => "T", "body_html" => "<p>T</p>" }
   end
 
   def make_operation(adapter:, max_attempts: 3, attempt_count: 0, status: "pending")

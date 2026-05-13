@@ -49,7 +49,13 @@ module LedgerHelper
 
   # Tiny label for the kind, used by stream rows + tray rows.
   def ledger_kind_label(entry)
-    case entry.kind
+    ledger_kind_label_word(entry.kind)
+  end
+
+  # The word form of a kind symbol, usable without an Entry — handy for
+  # the weekly-pulse buckets.
+  def ledger_kind_label_word(kind)
+    case kind
     when :income     then "Income"
     when :expense    then "Expense"
     when :tax        then "Tax"

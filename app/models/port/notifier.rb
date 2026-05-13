@@ -5,7 +5,8 @@ module Port
     INPUT_SHAPE = {
       "recipient" => String,
       "subject"   => String,
-      "body_text" => String
+      "body_text" => String,
+      "body_html" => String
     }.freeze
 
     OUTPUT_SHAPE = {
