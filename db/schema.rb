@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_12_193936) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_070827) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -62,6 +62,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_193936) do
     t.index ["posted_on"], name: "index_bank_transactions_on_posted_on"
   end
 
+  create_table "clients", force: :cascade do |t|
+    t.text "address"
+    t.string "contact_email"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.string "default_iban"
+    t.integer "default_payment_terms_days", default: 30
+    t.string "default_tax_treatment", default: "intra_eu_reverse_charge", null: false
+    t.string "legal_name", null: false
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.string "vat_number"
+    t.index ["legal_name"], name: "index_clients_on_legal_name", unique: true
+  end
+
   create_table "filings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "filable_id", null: false
@@ -102,16 +117,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_193936) do
 
   create_table "issued_invoices", force: :cascade do |t|
     t.integer "amount_cents", null: false
-    t.string "client_name", null: false
+    t.integer "client_id"
+    t.string "client_name"
     t.datetime "created_at", null: false
     t.string "currency", default: "EUR", null: false
+    t.string "iban_override"
     t.string "invoice_status", default: "draft", null: false
     t.date "issued_on"
+    t.text "notes"
     t.string "number", null: false
+    t.integer "payment_terms_days"
     t.integer "period_month", null: false
     t.integer "period_year", null: false
+    t.date "service_period_end"
+    t.date "service_period_start"
+    t.string "tax_treatment"
     t.datetime "updated_at", null: false
     t.string "verifactu_ref"
+    t.index ["client_id"], name: "index_issued_invoices_on_client_id"
     t.index ["number"], name: "index_issued_invoices_on_number", unique: true
     t.index ["period_year", "period_month"], name: "index_issued_invoices_on_period_year_and_period_month"
   end
@@ -178,5 +201,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_193936) do
   add_foreign_key "bank_transactions", "filings", column: "matched_filing_id"
   add_foreign_key "filings", "users"
   add_foreign_key "issued_invoice_line_items", "issued_invoices"
+  add_foreign_key "issued_invoices", "clients"
   add_foreign_key "sessions", "users"
 end

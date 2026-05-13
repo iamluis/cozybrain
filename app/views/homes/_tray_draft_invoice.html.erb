@@ -5,7 +5,7 @@
       Draft invoice · <%= invoice.client_name %>
     </span>
     <span class="tray__item-from">
-      <%= invoice.period_label %> · €<%= number_with_precision(invoice.computed_total_cents / 100.0, precision: 2, delimiter: ",") %>
+      <%= invoice.period_label %> · €<%= number_with_precision(invoice.total, precision: 2, delimiter: ",") %>
     </span>
   </div>
 

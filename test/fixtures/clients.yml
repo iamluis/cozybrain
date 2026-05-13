@@ -1,0 +1,11 @@
+lab900:
+  legal_name: Lab900
+  vat_number: BE0123456789
+  address: |
+    Diestsestraat 75
+    3000 Leuven
+  country: BE
+  contact_email: accounts@lab900.com
+  default_iban: ES1234567890123456789012
+  default_tax_treatment: intra_eu_reverse_charge
+  default_payment_terms_days: 30

@@ -5,14 +5,18 @@
 module Port
   module InvoiceIssuer
     INPUT_SHAPE = {
-      "invoice_id"    => Integer,
-      "number"        => String,
-      "client_name"   => String,
-      "period_year"   => Integer,
-      "period_month"  => Integer,
-      "currency"      => String,
-      "total_cents"   => Integer,
-      "line_items"    => Array
+      "invoice_id"           => Integer,
+      "number"               => String,
+      "client_id"            => Integer,
+      "client_legal_name"    => String,
+      "service_period_start" => String,
+      "service_period_end"   => String,
+      "tax_treatment"        => String,
+      "currency"             => String,
+      "subtotal_cents"       => Integer,
+      "tax_amount_cents"     => Integer,
+      "total_cents"          => Integer,
+      "line_items"           => Array
     }.freeze
 
     OUTPUT_SHAPE = {

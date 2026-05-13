@@ -1,9 +1,21 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Idempotent: safe to run repeatedly.
+
+Client.find_or_create_by!(legal_name: "Lab900") do |c|
+  c.country                     = "BE"
+  c.default_tax_treatment       = "intra_eu_reverse_charge"
+  c.default_payment_terms_days  = 30
+end
+
+# Backfill: every existing invoice that came from before this milestone is
+# Lab900's. The model validates client presence, so without this the test
+# suite breaks after migration.
+lab900 = Client.find_by!(legal_name: "Lab900")
+IssuedInvoice.where(client_id: nil).find_each do |inv|
+  start_d = Date.new(inv.period_year, inv.period_month, 1)
+  inv.update_columns(
+    client_id:            lab900.id,
+    tax_treatment:        lab900.default_tax_treatment,
+    service_period_start: start_d,
+    service_period_end:   start_d.end_of_month
+  )
+end

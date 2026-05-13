@@ -1,4 +1,5 @@
 lab900_april:
+  client: lab900
   client_name: Lab900
   number: "2026-0004"
   issued_on: 2026-05-01
@@ -6,13 +7,19 @@ lab900_april:
   currency: EUR
   period_year: 2026
   period_month: 4
+  service_period_start: 2026-04-01
+  service_period_end: 2026-04-30
+  tax_treatment: intra_eu_reverse_charge
   invoice_status: sent
 
 lab900_may_draft:
-  client_name: Lab900
+  client: lab900
   number: "2026-0005"
   amount_cents: 850000
   currency: EUR
   period_year: 2026
   period_month: 5
+  service_period_start: 2026-05-01
+  service_period_end: 2026-05-31
+  tax_treatment: intra_eu_reverse_charge
   invoice_status: draft

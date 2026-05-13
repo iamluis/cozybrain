@@ -18,7 +18,7 @@
       <tr>
         <td colspan="3" class="invoice__total-label">Total</td>
         <td class="invoice__total-amount" data-invoice-lines-target="total">
-          €<%= number_with_precision(invoice.computed_total_cents / 100.0, precision: 2, delimiter: ",") %>
+          €<%= number_with_precision(invoice.subtotal, precision: 2, delimiter: ",") %>
         </td>
         <td></td>
       </tr>

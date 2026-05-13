@@ -128,29 +128,40 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to invoice_path(sent)
   end
 
-  test "update can change client name and period; filing's period syncs" do
+  test "update can change service period and filing's period syncs" do
     draft = issued_invoices(:lab900_may_draft)
 
     patch invoice_path(draft), params: {
       issued_invoice: {
-        client_name:  "Lab900 NV",
-        period_year:  "2026",
-        period_month: "6"
+        service_period_start: "2026-06-01",
+        service_period_end:   "2026-06-30"
       }
     }
 
     draft.reload
-    assert_equal "Lab900 NV", draft.client_name
-    assert_equal 6,           draft.period_month
-    assert_equal 6,           draft.filing.reload.period_month
+    assert_equal Date.new(2026, 6, 30), draft.service_period_end
+    assert_equal 6,                     draft.period_month
+    assert_equal 6,                     draft.filing.reload.period_month
     assert_redirected_to invoice_path(draft)
   end
 
-  test "show renders an editable client_name input + period select for a draft" do
+  test "update can switch the per-invoice tax_treatment override" do
+    draft = issued_invoices(:lab900_may_draft)
+    patch invoice_path(draft), params: { issued_invoice: { tax_treatment: "domestic_vat_21" } }
+    assert_equal "domestic_vat_21", draft.reload.tax_treatment
+    assert draft.tax_amount_cents.positive?
+  end
+
+  test "show renders client picker + service period inputs + tax treatment select" do
     draft = issued_invoices(:lab900_may_draft)
     get invoice_path(draft)
 
-    assert_select "input.invoice__party-input[name='issued_invoice[client_name]']"
-    assert_select "select[name='issued_invoice[period_month]']"
+    assert_select "select[name='issued_invoice[client_id]']"
+    assert_select "input[name='issued_invoice[service_period_start]']"
+    assert_select "input[name='issued_invoice[service_period_end]']"
+    assert_select "select[name='issued_invoice[tax_treatment]']"
+    assert_select "input[name='issued_invoice[payment_terms_days]']"
+    assert_select "input[name='issued_invoice[iban_override]']"
+    assert_select "textarea[name='issued_invoice[notes]']"
   end
 end

@@ -49,23 +49,24 @@ export default class extends Controller {
   }
 
   recomputeTotal() {
-    let totalCents = 0
+    let totalEuros = 0
     this.rowsTarget.querySelectorAll(".invoice__line").forEach((row) => {
       if (row.style.display === "none") return
       const qty  = parseFloat(row.querySelector("[name*='[quantity]']")?.value || 0)
-      const rate = parseInt(row.querySelector("[name*='[unit_amount_cents]']")?.value || 0, 10)
+      const rate = parseFloat(row.querySelector("[name*='[unit_amount]']")?.value || 0)
       if (Number.isFinite(qty) && Number.isFinite(rate)) {
-        totalCents += Math.round(qty * rate)
+        const lineTotal = qty * rate
+        totalEuros += lineTotal
 
         const amountCell = row.querySelector(".invoice__line-amount")
         if (amountCell) {
-          amountCell.textContent = `€${(qty * rate / 100).toFixed(2)}`
+          amountCell.textContent = `€${lineTotal.toFixed(2)}`
         }
       }
     })
 
     if (this.hasTotalTarget) {
-      this.totalTarget.textContent = `€${(totalCents / 100).toFixed(2)}`
+      this.totalTarget.textContent = `€${totalEuros.toFixed(2)}`
     }
   }
 

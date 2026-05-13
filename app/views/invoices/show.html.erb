@@ -14,13 +14,11 @@
             <div class="invoice__sub">
               #<%= @invoice.number %>
               ·
-              <%= f.select :period_month,
-                    (1..12).map { |m| [ Date::MONTHNAMES[m], m ] },
-                    {},
-                    class: "invoice__period-select",
-                    data: { action: "change->invoice-lines#fieldChanged" } %>
-              <%= f.hidden_field :period_year %>
-              <%= @invoice.period_year %>
+              <span class="invoice__sub-period">
+                <%= f.date_field :service_period_start, class: "invoice__period-input", data: { action: "change->invoice-lines#fieldChanged" } %>
+                <span class="invoice__sub-sep">→</span>
+                <%= f.date_field :service_period_end, class: "invoice__period-input", data: { action: "change->invoice-lines#fieldChanged" } %>
+              </span>
             </div>
           </div>
           <div class="invoice__head-meta">
@@ -37,14 +35,60 @@
           </div>
           <div>
             <div class="invoice__party-label">To</div>
-            <%= f.text_field :client_name,
+            <%= f.collection_select :client_id,
+                  Client.order(:legal_name),
+                  :id, :legal_name,
+                  {},
                   class: "invoice__party-input",
-                  placeholder: "Client",
-                  data: { action: "input->invoice-lines#fieldChanged" } %>
+                  data: { action: "change->invoice-lines#fieldChanged" } %>
+            <% if @invoice.client %>
+              <div class="invoice__party-meta">
+                <%= @invoice.client.vat_number %>
+                <% if @invoice.client.address.present? %>
+                  · <%= simple_format @invoice.client.address, {}, sanitize: true, wrapper_tag: "span" %>
+                <% end %>
+              </div>
+            <% end %>
           </div>
         </section>
 
         <%= render "lines_editable", f: f, invoice: @invoice %>
+
+        <section class="invoice__settings">
+          <div class="invoice__settings-field">
+            <%= f.label :tax_treatment, "Tax treatment", class: "invoice__settings-label" %>
+            <%= f.select :tax_treatment,
+                  IssuedInvoice::TAX_TREATMENTS.map { |t| [ tax_treatment_label(t), t ] },
+                  { include_blank: "Use client default (#{tax_treatment_label(@invoice.client.default_tax_treatment)})" },
+                  class: "invoice__settings-input",
+                  data: { action: "change->invoice-lines#fieldChanged" } %>
+          </div>
+
+          <div class="invoice__settings-field">
+            <%= f.label :payment_terms_days, "Payment terms (days)", class: "invoice__settings-label" %>
+            <%= f.number_field :payment_terms_days,
+                  placeholder: @invoice.client.default_payment_terms_days,
+                  class: "invoice__settings-input",
+                  data: { action: "input->invoice-lines#fieldChanged" } %>
+          </div>
+
+          <div class="invoice__settings-field invoice__settings-field--wide">
+            <%= f.label :iban_override, "IBAN", class: "invoice__settings-label" %>
+            <%= f.text_field :iban_override,
+                  placeholder: @invoice.client.default_iban,
+                  class: "invoice__settings-input",
+                  data: { action: "input->invoice-lines#fieldChanged" } %>
+          </div>
+
+          <div class="invoice__settings-field invoice__settings-field--wide">
+            <%= f.label :notes, "Notes", class: "invoice__settings-label" %>
+            <%= f.text_area :notes,
+                  rows: 2,
+                  class: "invoice__settings-input invoice__settings-input--area",
+                  placeholder: "Optional. Shows in the footer of the PDF.",
+                  data: { action: "input->invoice-lines#fieldChanged" } %>
+          </div>
+        </section>
 
         <div class="invoice__save">
           <%= f.submit "Save", class: "button button--quiet" %>
@@ -53,7 +97,7 @@
       <% end %>
 
       <footer class="invoice__actions">
-        <%= button_to "Send to #{@invoice.client_name}",
+        <%= button_to "Send to #{@invoice.display_client_name}",
               send_to_client_invoice_path(@invoice),
               method: :post,
               class: "button button--primary",
@@ -82,11 +126,39 @@
         </div>
         <div>
           <div class="invoice__party-label">To</div>
-          <div class="invoice__party-name"><%= @invoice.client_name %></div>
+          <div class="invoice__party-name"><%= @invoice.display_client_name %></div>
+          <% if @invoice.client&.vat_number.present? %>
+            <div class="invoice__party-meta"><%= @invoice.client.vat_number %></div>
+          <% end %>
+          <% if @invoice.client&.address.present? %>
+            <div class="invoice__party-meta"><%= simple_format @invoice.client.address %></div>
+          <% end %>
         </div>
       </section>
 
       <%= render "lines_readonly", invoice: @invoice %>
+
+      <%= render "totals_block", invoice: @invoice %>
+
+      <% legal = invoice_legal_mention(@invoice) %>
+      <% if legal.present? %>
+        <p class="invoice__legal"><%= legal %></p>
+      <% end %>
+
+      <% if @invoice.notes.present? %>
+        <p class="invoice__notes"><%= simple_format @invoice.notes %></p>
+      <% end %>
+
+      <% if @invoice.effective_payment_terms_days.present? || @invoice.effective_iban.present? %>
+        <footer class="invoice__payment-block">
+          <% if @invoice.effective_payment_terms_days.present? %>
+            <div>Payment within <%= @invoice.effective_payment_terms_days %> days.</div>
+          <% end %>
+          <% if @invoice.effective_iban.present? %>
+            <div>IBAN: <%= @invoice.effective_iban %></div>
+          <% end %>
+        </footer>
+      <% end %>
 
       <% if @invoice.verifactu_ref.present? %>
         <footer class="invoice__footer-meta">

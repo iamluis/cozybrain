@@ -10,12 +10,19 @@ class InvoicesController < ApplicationController
   end
 
   def create
-    period = (params[:period_year] && params[:period_month]) \
-      ? [ params[:period_year].to_i, params[:period_month].to_i ]
-      : next_period_after(IssuedInvoice.order(period_year: :desc, period_month: :desc).first)
+    period   = period_for_new_draft
+    # v1: a single client (Lab900). Picker on the form lands later when
+    # there's more than one. For now we default to the most-recent invoice's
+    # client, falling back to the first client in the system.
+    last_inv = IssuedInvoice.order(period_year: :desc, period_month: :desc).first
+    client   = last_inv&.client || Client.first
+    unless client
+      redirect_to invoices_path, alert: "Add a client first" and return
+    end
 
     draft = IssuedInvoice.draft_next(
       user:         Current.user,
+      client:       client,
       period_year:  period.first,
       period_month: period.last
     )
@@ -28,7 +35,6 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    # Draft view is editable; sent view is read-only. Same template branches.
   end
 
   def update
@@ -53,14 +59,19 @@ class InvoicesController < ApplicationController
       correlation_id:  "IssuedInvoice:#{@invoice.id}",
       max_attempts:    5,
       input: {
-        "invoice_id"    => @invoice.id,
-        "number"        => @invoice.number,
-        "client_name"   => @invoice.client_name,
-        "period_year"   => @invoice.period_year,
-        "period_month"  => @invoice.period_month,
-        "currency"      => @invoice.currency,
-        "total_cents"   => @invoice.amount_cents,
-        "line_items"    => @invoice.line_items.map { |li|
+        "invoice_id"           => @invoice.id,
+        "number"               => @invoice.number,
+        "client_id"            => @invoice.client_id,
+        "client_legal_name"    => @invoice.client.legal_name,
+        "client_vat_number"    => @invoice.client.vat_number,
+        "service_period_start" => @invoice.service_period_start&.iso8601,
+        "service_period_end"   => @invoice.service_period_end&.iso8601,
+        "tax_treatment"        => @invoice.effective_tax_treatment,
+        "currency"             => @invoice.currency,
+        "subtotal_cents"       => @invoice.subtotal_cents,
+        "tax_amount_cents"     => @invoice.tax_amount_cents,
+        "total_cents"          => @invoice.total_cents,
+        "line_items"           => @invoice.line_items.map { |li|
           { "description" => li.description, "quantity" => li.quantity.to_s, "unit_amount_cents" => li.unit_amount_cents }
         }
       }
@@ -68,14 +79,20 @@ class InvoicesController < ApplicationController
 
     OperationJob.perform_later(operation.id)
 
-    @invoice.update!(invoice_status: "approved", issued_on: Date.current)
+    # Freeze the client legal name onto the invoice so future name changes
+    # don't rewrite history.
+    @invoice.update!(
+      invoice_status: "approved",
+      issued_on:      Date.current,
+      client_name:    @invoice.client.legal_name
+    )
     redirect_to invoice_path(@invoice), notice: "Sending…"
   end
 
   private
 
   def set_invoice
-    @invoice = IssuedInvoice.includes(:line_items, :filing).find(params[:id])
+    @invoice = IssuedInvoice.includes(:line_items, :filing, :client).find(params[:id])
   end
 
   def refuse_unless_draft
@@ -86,11 +103,23 @@ class InvoicesController < ApplicationController
 
   def invoice_params
     params.expect(issued_invoice: [
-      :client_name,
-      :period_year,
-      :period_month,
-      line_items_attributes: [ [ :id, :position, :description, :quantity, :unit_amount_cents, :_destroy ] ]
+      :client_id,
+      :service_period_start,
+      :service_period_end,
+      :tax_treatment,
+      :payment_terms_days,
+      :iban_override,
+      :notes,
+      line_items_attributes: [ [ :id, :position, :description, :quantity, :unit_amount, :unit_amount_cents, :_destroy ] ]
     ])
+  end
+
+  def period_for_new_draft
+    if params[:period_year].present? && params[:period_month].present?
+      [ params[:period_year].to_i, params[:period_month].to_i ]
+    else
+      next_period_after(IssuedInvoice.order(period_year: :desc, period_month: :desc).first)
+    end
   end
 
   def next_period_after(invoice)

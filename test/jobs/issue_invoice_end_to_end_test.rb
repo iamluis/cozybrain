@@ -12,14 +12,18 @@ class IssueInvoiceEndToEndTest < ActiveJob::TestCase
       adapter_name:  Adapter::Null::InvoiceIssuer.name,
       max_attempts:  3,
       input: {
-        "invoice_id"    => invoice.id,
-        "number"        => invoice.number,
-        "client_name"   => invoice.client_name,
-        "period_year"   => invoice.period_year,
-        "period_month"  => invoice.period_month,
-        "currency"      => invoice.currency,
-        "total_cents"   => invoice.computed_total_cents,
-        "line_items"    => invoice.line_items.map { |li|
+        "invoice_id"           => invoice.id,
+        "number"               => invoice.number,
+        "client_id"            => invoice.client_id,
+        "client_legal_name"    => invoice.client.legal_name,
+        "service_period_start" => invoice.service_period_start.iso8601,
+        "service_period_end"   => invoice.service_period_end.iso8601,
+        "tax_treatment"        => invoice.effective_tax_treatment,
+        "currency"             => invoice.currency,
+        "subtotal_cents"       => invoice.subtotal_cents,
+        "tax_amount_cents"     => invoice.tax_amount_cents,
+        "total_cents"          => invoice.total_cents,
+        "line_items"           => invoice.line_items.map { |li|
           { "description" => li.description, "quantity" => li.quantity.to_s, "unit_amount_cents" => li.unit_amount_cents }
         }
       }

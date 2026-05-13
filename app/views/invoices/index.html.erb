@@ -13,7 +13,7 @@
         <%= @draft.client_name %>
       </div>
       <div class="invoice-card__total">
-        €<%= number_with_precision(@draft.computed_total_cents / 100.0, precision: 2, delimiter: "," ) %>
+        €<%= number_with_precision(@draft.total, precision: 2, delimiter: ",") %>
       </div>
     <% end %>
   <% else %>
