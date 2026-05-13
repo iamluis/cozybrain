@@ -24,8 +24,20 @@ a Tuesday, it doesn't ship.
 4. **No decoration without function.** Rules separate sections because we
    need separation. Pills exist where status genuinely matters. Icons appear
    when typography alone is ambiguous. Nothing for vibe.
-5. **Generous, but not loose.** Use the spacing scale. Big margins are fine;
-   inconsistent margins are not.
+5. **Dense, not loose.** Use the spacing scale, but lean dense. One row
+   per ledger entry, title + meta inline, ~30px row height. The user is
+   reading a book of accounts, not browsing a landing page.
+6. **Fewer clicks to done.** Every flow has a click-count target; if a
+   reasonable redesign cuts a click, take it. Specifically:
+   - Capture is one tap from anywhere (header button + bottom-nav action).
+   - Send invoice fires straight from the tray Send pill — no detour.
+   - Match a bank tx → candidates should be inline on the home tray when
+     possible, not a separate page navigation. (Currently a separate
+     page; revisit if it adds friction.)
+   - Dismiss is one tap from the same surface that surfaces the item.
+   - Auto-save is the default for any document edit — no explicit save.
+   Rule of thumb: if a routine task takes more than two taps from the
+   home page, it's a bug in the design, not a feature.
 
 ---
 
