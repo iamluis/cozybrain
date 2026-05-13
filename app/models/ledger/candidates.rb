@@ -15,17 +15,42 @@ module Ledger
     def for_bank_transaction(txn, limit: 20)
       target_cents = txn.amount_cents.abs
       target_date  = txn.posted_on
+      cents_min    = [ target_cents - AMOUNT_TOLERANCE_CENTS, 0 ].max
+      cents_max    = target_cents + AMOUNT_TOLERANCE_CENTS
+      date_min     = target_date - DATE_TOLERANCE_DAYS.days
+      date_max     = target_date + DATE_TOLERANCE_DAYS.days
 
-      Filing.untrashed
-            .joins("LEFT OUTER JOIN bank_transactions ON bank_transactions.matched_filing_id = filings.id")
-            .where("bank_transactions.id IS NULL OR bank_transactions.id = ?", txn.id)
-            .includes(:filable)
-            .select { |f| f.filable.respond_to?(:amount_cents) && f.filable.amount_cents.present? }
-            .map    { |f| [ f, distance(f, target_cents, target_date) ] }
-            .reject { |_, d| d.nil? }
-            .sort_by { |_, d| d }
-            .first(limit)
-            .map(&:first)
+      # SQL-level scope by amount + date window so we don't load every
+      # Filing and filter in Ruby. Polymorphic, so query both filable
+      # tables via UNION semantics — split into two queries.
+      receipt_ids = Receipt.where(amount_cents: cents_min..cents_max).pluck(:id)
+      invoice_ids = IssuedInvoice.where(amount_cents: cents_min..cents_max).pluck(:id)
+
+      filable_clause = []
+      filable_args   = []
+      if receipt_ids.any?
+        filable_clause << "(filable_type = 'Receipt' AND filable_id IN (?))"
+        filable_args   << receipt_ids
+      end
+      if invoice_ids.any?
+        filable_clause << "(filable_type = 'IssuedInvoice' AND filable_id IN (?))"
+        filable_args   << invoice_ids
+      end
+      return [] if filable_clause.empty?
+
+      candidates = Filing.untrashed
+        .joins("LEFT OUTER JOIN bank_transactions ON bank_transactions.matched_filing_id = filings.id")
+        .where("bank_transactions.id IS NULL OR bank_transactions.id = ?", txn.id)
+        .where(received_at: date_min.beginning_of_day..date_max.end_of_day)
+        .where(filable_clause.join(" OR "), *filable_args)
+        .includes(:filable)
+
+      candidates
+        .map    { |f| [ f, distance(f, target_cents, target_date) ] }
+        .reject { |_, d| d.nil? }
+        .sort_by { |_, d| d }
+        .first(limit)
+        .map(&:first)
     end
 
     def distance(filing, target_cents, target_date)

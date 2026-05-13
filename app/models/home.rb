@@ -37,21 +37,45 @@ class Home
   # one in a Ledger::Entry, and de-dupe pairs (a matched bank tx + its
   # filing are one event, not two).
   def load_entries
-    filings      = Filing.untrashed.includes(:filable, :matched_bank_transaction)
-    transactions = BankTransaction.active.includes(:matched_filing)
+    filings = Filing.untrashed.to_a
+    preload_polymorphic_targets!(filings)
 
-    paired_txn_ids = Set.new
+    transactions = BankTransaction.active.includes(:matched_filing).to_a
 
-    entries = filings.map do |f|
-      paired_txn_ids << f.matched_bank_transaction.id if f.matched_bank_transaction
-      Ledger::Entry.from_filing(f)
-    end
+    paired_txn_ids = filings.filter_map { |f| f.matched_bank_transaction&.id }.to_set
 
+    entries = filings.map { |f| Ledger::Entry.from_filing(f) }
     transactions.each do |t|
       next if paired_txn_ids.include?(t.id)
       entries << Ledger::Entry.from_bank_transaction(t)
     end
-
     entries
+  end
+
+  # Polymorphic includes (:filable) can't drill into filable-specific
+  # associations. Hand-roll: preload filable + bank_tx, then per-type
+  # preload the deeper stuff (Active Storage for Receipts, Client for
+  # IssuedInvoices). Cuts ~100 queries off a 400-filing /home render.
+  def preload_polymorphic_targets!(filings)
+    ActiveRecord::Associations::Preloader.new(
+      records: filings,
+      associations: [ :filable, :matched_bank_transaction ]
+    ).call
+
+    by_type = filings.group_by(&:filable_type)
+
+    if (receipts = by_type["Receipt"]&.map(&:filable))
+      ActiveRecord::Associations::Preloader.new(
+        records: receipts,
+        associations: { original_photo_attachment: :blob }
+      ).call
+    end
+
+    if (invoices = by_type["IssuedInvoice"]&.map(&:filable))
+      ActiveRecord::Associations::Preloader.new(
+        records: invoices,
+        associations: :client
+      ).call
+    end
   end
 end
