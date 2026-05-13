@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  resources :receipts, only: [ :new, :create, :show ]
+  resources :receipts, only: [ :new, :create, :show, :edit, :update ]
   resources :invoices, only: [ :index, :show, :create, :update ] do
     member { post :send_to_client }
   end

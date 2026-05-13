@@ -1,0 +1,66 @@
+<%= form_with model: receipt, multipart: true, url: form_url, method: form_method, class: "receipt-form" do |f| %>
+  <% if receipt.errors.any? %>
+    <div class="errors">
+      <%= pluralize(receipt.errors.count, "thing") %> needs fixing:
+      <ul>
+        <% receipt.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :amount, class: "field__label" %>
+    <div class="amount">
+      <span class="amount__currency">€</span>
+      <%= f.number_field :amount,
+            step: 0.01,
+            inputmode: "decimal",
+            autocomplete: "off",
+            placeholder: "0.00",
+            class: "amount__input" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <%= f.label :original_photo, class: "photo" do %>
+      <span aria-hidden="true">📷</span>
+      <span><%= receipt.original_photo.attached? ? "Replace photo" : "Photo of receipt" %></span>
+      <%= f.file_field :original_photo, accept: "image/*", capture: "environment" %>
+    <% end %>
+    <%= f.date_field :paid_on, class: "date-chip" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :vendor, class: "field__label" %>
+    <%= f.text_field :vendor,
+          autocomplete: "off",
+          placeholder: "Where",
+          class: "input" %>
+  </div>
+
+  <div class="grid-2">
+    <div class="field">
+      <%= f.label :country, class: "field__label" %>
+      <%= f.select :country,
+            Receipt::COUNTRIES,
+            { include_blank: "—" },
+            class: "select" %>
+    </div>
+    <div class="field">
+      <%= label_tag "receipt[note]", "Note", class: "field__label" %>
+      <%= text_field_tag "receipt[note]", receipt.filing&.note,
+            placeholder: "Optional",
+            autocomplete: "off",
+            class: "input" %>
+    </div>
+  </div>
+
+  <div class="receipt-form__actions">
+    <%= f.submit submit_label, class: "button button--primary" %>
+    <% if receipt.persisted? %>
+      <%= link_to "Cancel", receipt_path(receipt), class: "button button--quiet" %>
+    <% end %>
+  </div>
+<% end %>

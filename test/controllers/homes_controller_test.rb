@@ -12,7 +12,7 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
   test "stream lists filed filings" do
     get home_path
-    assert_select "li.stream__entry .entry__title", text: /Ryanair/
+    assert_select "li.stream__row .entry__title", text: /Ryanair/
   end
 
   test "tray surfaces needs_review filing + draft invoice + unmatched txns" do

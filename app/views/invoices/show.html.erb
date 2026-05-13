@@ -2,40 +2,53 @@
 
 <div class="invoice-page">
   <div class="invoice">
-    <header class="invoice__head">
-      <div>
-        <div class="invoice__title">Invoice</div>
-        <div class="invoice__sub">
-          #<%= @invoice.number %> · <%= @invoice.period_label %>
-        </div>
-      </div>
-      <% if @invoice.invoice_draft? %>
-        <span class="entry__pill">draft</span>
-      <% elsif @invoice.invoice_approved? %>
-        <span class="entry__pill entry__pill--sending">sending</span>
-      <% else %>
-        <span class="entry__pill entry__pill--sent"><%= @invoice.invoice_status %></span>
-      <% end %>
-    </header>
-
-    <section class="invoice__parties">
-      <div>
-        <div class="invoice__party-label">From</div>
-        <div class="invoice__party-name">Sotelo y Sotelo SLU</div>
-        <div class="invoice__party-meta">Madrid · Spain</div>
-      </div>
-      <div>
-        <div class="invoice__party-label">To</div>
-        <div class="invoice__party-name"><%= @invoice.client_name %></div>
-      </div>
-    </section>
-
     <% if @invoice.invoice_draft? %>
-      <%= form_with model: @invoice, url: invoice_path(@invoice), method: :patch, class: "invoice__form" do |f| %>
+      <%= form_with model: @invoice,
+            url: invoice_path(@invoice),
+            method: :patch,
+            class: "invoice__form",
+            data: { controller: "invoice-lines", action: "turbo:submit-end->invoice-lines#submitEnded" } do |f| %>
+        <header class="invoice__head">
+          <div>
+            <div class="invoice__title">Invoice</div>
+            <div class="invoice__sub">
+              #<%= @invoice.number %>
+              ·
+              <%= f.select :period_month,
+                    (1..12).map { |m| [ Date::MONTHNAMES[m], m ] },
+                    {},
+                    class: "invoice__period-select",
+                    data: { action: "change->invoice-lines#fieldChanged" } %>
+              <%= f.hidden_field :period_year %>
+              <%= @invoice.period_year %>
+            </div>
+          </div>
+          <div class="invoice__head-meta">
+            <span class="entry__pill">draft</span>
+            <span class="invoice__saved-pill" data-invoice-lines-target="savedPill" data-state=""></span>
+          </div>
+        </header>
+
+        <section class="invoice__parties">
+          <div>
+            <div class="invoice__party-label">From</div>
+            <div class="invoice__party-name">Sotelo y Sotelo SLU</div>
+            <div class="invoice__party-meta">Madrid · Spain</div>
+          </div>
+          <div>
+            <div class="invoice__party-label">To</div>
+            <%= f.text_field :client_name,
+                  class: "invoice__party-input",
+                  placeholder: "Client",
+                  data: { action: "input->invoice-lines#fieldChanged" } %>
+          </div>
+        </section>
+
         <%= render "lines_editable", f: f, invoice: @invoice %>
 
         <div class="invoice__save">
-          <%= f.submit "Save changes", class: "button" %>
+          <%= f.submit "Save", class: "button button--quiet" %>
+          <span class="invoice__save-hint">— saves automatically as you type</span>
         </div>
       <% end %>
 
@@ -47,6 +60,32 @@
               form: { class: "invoice__send-form" } %>
       </footer>
     <% else %>
+      <header class="invoice__head">
+        <div>
+          <div class="invoice__title">Invoice</div>
+          <div class="invoice__sub">
+            #<%= @invoice.number %> · <%= @invoice.period_label %>
+          </div>
+        </div>
+        <% if @invoice.invoice_approved? %>
+          <span class="entry__pill entry__pill--sending">sending</span>
+        <% else %>
+          <span class="entry__pill entry__pill--sent"><%= @invoice.invoice_status %></span>
+        <% end %>
+      </header>
+
+      <section class="invoice__parties">
+        <div>
+          <div class="invoice__party-label">From</div>
+          <div class="invoice__party-name">Sotelo y Sotelo SLU</div>
+          <div class="invoice__party-meta">Madrid · Spain</div>
+        </div>
+        <div>
+          <div class="invoice__party-label">To</div>
+          <div class="invoice__party-name"><%= @invoice.client_name %></div>
+        </div>
+      </section>
+
       <%= render "lines_readonly", invoice: @invoice %>
 
       <% if @invoice.verifactu_ref.present? %>

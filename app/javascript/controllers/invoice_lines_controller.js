@@ -1,18 +1,30 @@
-// Manages add/remove of line item rows on an invoice draft form.
-// No server round-trip on add — a template row is cloned client-side and
-// inserted into the form. On Save, Rails' accepts_nested_attributes_for
-// picks up the new rows. Remove on a persisted row marks _destroy=1; on
-// a freshly-added (unsaved) row it just yanks the DOM node.
+// Manages the editable invoice form:
+//   · add/remove line item rows client-side (no server round-trip)
+//   · recompute the running total live as quantity/rate inputs change
+//   · auto-submit the form on blur or input change, debounced ~600ms
+//
+// On submit Turbo handles the request; the server response re-renders the
+// form. Rails' accepts_nested_attributes_for + _destroy flag handles the
+// persistence side.
 import { Controller } from "@hotwired/stimulus"
 
+const AUTOSAVE_DEBOUNCE_MS = 600
+
 export default class extends Controller {
-  static targets = ["rows", "template"]
+  static targets = ["rows", "template", "total", "savedPill"]
+
+  connect() {
+    this._timer = null
+    this.recomputeTotal()
+  }
 
   addRow(event) {
     event.preventDefault()
     const uniqueIndex = new Date().getTime()
     const html = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, uniqueIndex)
     this.rowsTarget.insertAdjacentHTML("beforeend", html)
+    this.recomputeTotal()
+    this.scheduleSubmit()
   }
 
   removeRow(event) {
@@ -26,5 +38,54 @@ export default class extends Controller {
     } else {
       row.remove()
     }
+    this.recomputeTotal()
+    this.scheduleSubmit()
+  }
+
+  // Wired to `input` on every editable field in the form.
+  fieldChanged() {
+    this.recomputeTotal()
+    this.scheduleSubmit()
+  }
+
+  recomputeTotal() {
+    let totalCents = 0
+    this.rowsTarget.querySelectorAll(".invoice__line").forEach((row) => {
+      if (row.style.display === "none") return
+      const qty  = parseFloat(row.querySelector("[name*='[quantity]']")?.value || 0)
+      const rate = parseInt(row.querySelector("[name*='[unit_amount_cents]']")?.value || 0, 10)
+      if (Number.isFinite(qty) && Number.isFinite(rate)) {
+        totalCents += Math.round(qty * rate)
+
+        const amountCell = row.querySelector(".invoice__line-amount")
+        if (amountCell) {
+          amountCell.textContent = `€${(qty * rate / 100).toFixed(2)}`
+        }
+      }
+    })
+
+    if (this.hasTotalTarget) {
+      this.totalTarget.textContent = `€${(totalCents / 100).toFixed(2)}`
+    }
+  }
+
+  scheduleSubmit() {
+    clearTimeout(this._timer)
+    this._timer = setTimeout(() => this.submit(), AUTOSAVE_DEBOUNCE_MS)
+  }
+
+  submit() {
+    const form = this.element.closest("form")
+    if (!form) return
+    form.requestSubmit()
+  }
+
+  // Wired to `turbo:submit-end` on the form. Flashes a "Saved · HH:MM" pill.
+  submitEnded(event) {
+    if (!this.hasSavedPillTarget) return
+    const ok = event.detail?.success
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    this.savedPillTarget.textContent = ok ? `Saved · ${time}` : "Save failed"
+    this.savedPillTarget.dataset.state = ok ? "ok" : "error"
   }
 }

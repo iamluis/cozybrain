@@ -11,6 +11,8 @@ class IssuedInvoice < ApplicationRecord
   accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: :all_blank
   has_one_attached :pdf
 
+  after_update :sync_filing_period, if: -> { saved_change_to_period_year? || saved_change_to_period_month? }
+
   validates :client_name,    presence: true
   validates :number,         presence: true, uniqueness: true
   validates :amount_cents,   presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -34,6 +36,14 @@ class IssuedInvoice < ApplicationRecord
   def period_label
     Date.new(period_year, period_month, 1).strftime("%B %Y")
   end
+
+  private
+
+  def sync_filing_period
+    filing&.update_columns(period_year: period_year, period_month: period_month)
+  end
+
+  public
 
   def self.next_number_for(year:)
     prefix = year.to_s

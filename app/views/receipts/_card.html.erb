@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card__amount">
+    €<%= number_with_precision(receipt.amount_cents / 100.0, precision: 2) %>
+  </div>
+  <div>
+    <%= receipt.vendor.presence || tag.span("(no vendor)", class: "card__meta") %>
+  </div>
+  <div class="card__meta">
+    <%= l(receipt.paid_on, format: :long) %><% if receipt.country.present? %> · <%= receipt.country %><% end %>
+  </div>
+  <% if receipt.filing.note.present? %>
+    <div class="card__note">"<%= receipt.filing.note %>"</div>
+  <% end %>
+
+  <div class="card__actions">
+    <%= link_to "Edit", edit_receipt_path(receipt), class: "card__edit" %>
+  </div>
+</div>

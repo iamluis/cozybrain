@@ -70,4 +70,56 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", new_receipt_path, text: "Add another"
     assert_select "a[href=?]", root_path,        text: "Done"
   end
+
+  test "show includes an Edit affordance pointing at edit_receipt_path" do
+    sign_in_as(@user)
+    receipt = receipts(:lab900_dinner)
+
+    get receipt_path(receipt)
+    assert_select "a[href=?]", edit_receipt_path(receipt), text: "Edit"
+  end
+
+  test "edit renders the form with current values" do
+    sign_in_as(@user)
+    receipt = receipts(:lab900_dinner)
+
+    get edit_receipt_path(receipt)
+    assert_response :success
+    assert_select "form[enctype='multipart/form-data']"
+    assert_select "input[name='receipt[vendor]'][value=?]", receipt.vendor
+    assert_select "input[name='receipt[note]']"
+  end
+
+  test "update with valid params persists changes including filing note" do
+    sign_in_as(@user)
+    receipt = receipts(:lab900_dinner)
+
+    patch receipt_path(receipt), params: {
+      receipt: {
+        amount: "30.00",
+        paid_on: receipt.paid_on,
+        vendor: "Le Pain Quotidien (Sablon)",
+        country: "BE",
+        note: "updated note"
+      }
+    }
+
+    receipt.reload
+    assert_equal 3000, receipt.amount_cents
+    assert_equal "Le Pain Quotidien (Sablon)", receipt.vendor
+    assert_equal "updated note", receipt.filing.note
+    assert_redirected_to receipt_path(receipt)
+  end
+
+  test "update with invalid params re-renders edit" do
+    sign_in_as(@user)
+    receipt = receipts(:lab900_dinner)
+
+    patch receipt_path(receipt), params: {
+      receipt: { amount: receipt.amount, paid_on: "" }
+    }
+
+    assert_response :unprocessable_content
+    assert_select "form[enctype='multipart/form-data']"
+  end
 end

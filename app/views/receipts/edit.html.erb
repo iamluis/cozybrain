@@ -1,0 +1,10 @@
+<% content_for :title, "Edit receipt" %>
+
+<div class="page stack">
+  <h1 class="page__title">Edit receipt</h1>
+  <%= render "form",
+        receipt: @receipt,
+        form_url: receipt_path(@receipt),
+        form_method: :patch,
+        submit_label: "Save" %>
+</div>

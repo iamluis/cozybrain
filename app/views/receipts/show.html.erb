@@ -1,25 +1,14 @@
 <% content_for :title, "Saved" %>
 
 <div class="page stack">
-  <div class="saved">
-    <span aria-hidden="true">✓</span>
-    <span>Saved</span>
-  </div>
+  <% if flash[:notice].blank? %>
+    <div class="saved">
+      <span aria-hidden="true">✓</span>
+      <span>Saved</span>
+    </div>
+  <% end %>
 
-  <div class="card">
-    <div class="card__amount">
-      €<%= number_with_precision(@receipt.amount_cents / 100.0, precision: 2) %>
-    </div>
-    <div>
-      <%= @receipt.vendor.presence || tag.span("(no vendor)", class: "card__meta") %>
-    </div>
-    <div class="card__meta">
-      <%= l(@receipt.paid_on, format: :long) %><% if @receipt.country.present? %> · <%= @receipt.country %><% end %>
-    </div>
-    <% if @receipt.filing.note.present? %>
-      <div class="card__note">“<%= @receipt.filing.note %>”</div>
-    <% end %>
-  </div>
+  <%= render "card", receipt: @receipt %>
 
   <div class="grid-2">
     <%= link_to "Add another", new_receipt_path, class: "button button--primary button--full" %>

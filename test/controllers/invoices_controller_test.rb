@@ -127,4 +127,30 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to invoice_path(sent)
   end
+
+  test "update can change client name and period; filing's period syncs" do
+    draft = issued_invoices(:lab900_may_draft)
+
+    patch invoice_path(draft), params: {
+      issued_invoice: {
+        client_name:  "Lab900 NV",
+        period_year:  "2026",
+        period_month: "6"
+      }
+    }
+
+    draft.reload
+    assert_equal "Lab900 NV", draft.client_name
+    assert_equal 6,           draft.period_month
+    assert_equal 6,           draft.filing.reload.period_month
+    assert_redirected_to invoice_path(draft)
+  end
+
+  test "show renders an editable client_name input + period select for a draft" do
+    draft = issued_invoices(:lab900_may_draft)
+    get invoice_path(draft)
+
+    assert_select "input.invoice__party-input[name='issued_invoice[client_name]']"
+    assert_select "select[name='issued_invoice[period_month]']"
+  end
 end

@@ -28,6 +28,14 @@ module StreamHelper
     formatted_amount(txn.amount_cents)
   end
 
+  def stream_event_target(event)
+    return nil unless event.is_a?(Filing)
+    case event.filable
+    when Receipt        then receipt_path(event.filable)
+    when IssuedInvoice  then invoice_path(event.filable)
+    end
+  end
+
   def tray_partial_for(item)
     case item
     when Filing          then "homes/tray_inbound_doc"
