@@ -16,7 +16,7 @@ class Operation < ApplicationRecord
     send_notification
     sync_bank_transactions
     deliver_inbound_document
-    sync_folder
+    sync_filing
   ].freeze
 
   # pending  → not yet run; eligible for begin!

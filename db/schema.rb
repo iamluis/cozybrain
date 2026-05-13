@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_110556) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_135837) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -93,6 +93,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_110556) do
     t.datetime "received_at", null: false
     t.string "source", null: false
     t.string "status", default: "pending", null: false
+    t.datetime "synced_at"
     t.datetime "trashed_at"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
@@ -100,6 +101,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_110556) do
     t.index ["filable_type", "filable_id"], name: "index_filings_on_filable"
     t.index ["folder", "period_year", "period_month"], name: "index_filings_on_folder_and_period_year_and_period_month"
     t.index ["holded_ref"], name: "index_filings_on_holded_ref", unique: true, where: "holded_ref IS NOT NULL"
+    t.index ["synced_at"], name: "index_filings_on_synced_at"
     t.index ["trashed_at"], name: "index_filings_on_trashed_at"
     t.index ["user_id", "status"], name: "index_filings_on_user_id_and_status"
     t.index ["user_id"], name: "index_filings_on_user_id"

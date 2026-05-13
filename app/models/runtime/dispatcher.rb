@@ -19,10 +19,8 @@ module Runtime
       "certify_receipt"          => Port::ReceiptCertifier,
       "send_notification"        => Port::Notifier,
       "issue_invoice"            => Port::InvoiceIssuer,
-      "deliver_inbound_document" => Port::InboundDocumentReceiver
-      # Future kinds bind their ports as those milestones ship:
-      #   "sync_folder"              => Port::FolderSync           (0010)
-      #   "sync_bank_transactions"   => Port::BankSync             (0013)
+      "deliver_inbound_document" => Port::InboundDocumentReceiver,
+      "sync_filing"              => Port::FolderSync
     }.freeze
 
     @bindings = {}
@@ -60,6 +58,7 @@ module Runtime
       bind(port: Port::Notifier,                adapter: Adapter::Null::Notifier)
       bind(port: Port::InvoiceIssuer,           adapter: Adapter::Null::InvoiceIssuer)
       bind(port: Port::InboundDocumentReceiver, adapter: Adapter::Heuristic::InboundDocumentReceiver)
+      bind(port: Port::FolderSync,              adapter: Adapter::Local::FolderSync)
     end
 
     def call(operation)

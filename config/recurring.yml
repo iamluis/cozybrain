@@ -8,3 +8,8 @@ production:
     schedule: "0 8 * * 1"        # Monday 08:00, Europe/Madrid below
     timezone: Europe/Madrid
     description: "Monday-morning bookkeeping digest"
+
+  folder_sync:
+    class: FolderSyncJob
+    schedule: "*/15 * * * *"     # every 15 minutes
+    description: "Mirror filings into the gestoría folder tree"
