@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# bin/deploy — push main + rebuild on the box.
+#
+# Usage:
+#   bin/deploy           # deploy current main
+#   bin/deploy --status  # show what's running
+#   bin/deploy --logs    # tail the app logs
+set -euo pipefail
+
+REMOTE_HOST="brain"
+REMOTE_PATH="/opt/brain"
+
+if [[ "${1:-}" == "--status" ]]; then
+  ssh "$REMOTE_HOST" "cd $REMOTE_PATH && docker compose ps"
+  exit 0
+fi
+
+if [[ "${1:-}" == "--logs" ]]; then
+  ssh "$REMOTE_HOST" "cd $REMOTE_PATH && docker compose logs -f --tail=100 app"
+  exit 0
+fi
+
+echo "→ pushing local main to origin..."
+git push origin main
+
+echo "→ pulling + rebuilding on $REMOTE_HOST..."
+ssh "$REMOTE_HOST" "set -e; \
+  cd $REMOTE_PATH && \
+  git fetch --quiet && \
+  git reset --hard origin/main && \
+  docker compose up -d --build"
+
+echo "→ waiting for healthcheck..."
+for i in {1..30}; do
+  status=$(ssh "$REMOTE_HOST" "cd $REMOTE_PATH && docker compose ps --format json app" 2>/dev/null | grep -o '"Health":"[^"]*"' | head -1 || echo "")
+  case "$status" in
+    *healthy*)  echo "✓ deployed and healthy"; exit 0 ;;
+    *unhealthy*) echo "✗ unhealthy after deploy — check bin/deploy --logs"; exit 1 ;;
+  esac
+  sleep 2
+done
+
+echo "⚠ healthcheck still pending after 60s; check bin/deploy --logs"
+exit 0

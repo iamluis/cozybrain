@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# bin/rollback — point the box at the previous commit and rebuild.
+#
+# Usage:
+#   bin/rollback         # rollback to HEAD~1
+#   bin/rollback <SHA>   # rollback to a specific commit
+set -euo pipefail
+
+REMOTE_HOST="brain"
+REMOTE_PATH="/opt/brain"
+
+if [[ -n "${1:-}" ]]; then
+  TARGET="$1"
+else
+  # Default: previous commit on the BOX, not local.
+  TARGET=$(ssh "$REMOTE_HOST" "cd $REMOTE_PATH && git rev-parse HEAD~1")
+fi
+
+echo "→ rolling back $REMOTE_HOST to $TARGET..."
+ssh "$REMOTE_HOST" "set -e; \
+  cd $REMOTE_PATH && \
+  git fetch --quiet && \
+  git reset --hard $TARGET && \
+  docker compose up -d --build"
+
+echo "✓ rolled back to $TARGET"

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# bin/server-setup — one-time setup on a fresh Hetzner box.
+#
+# Run from your Mac. Idempotent — safe to re-run if interrupted.
+# Assumes you can already `ssh brain` (key set up + Tailscale up).
+set -euo pipefail
+
+REMOTE_HOST="brain"
+REMOTE_PATH="/opt/brain"
+REPO_URL="git@github-cozybrain:iamluis/cozybrain.git"
+
+echo "→ installing docker on $REMOTE_HOST..."
+ssh "$REMOTE_HOST" 'bash -s' <<'SETUP'
+set -e
+if ! command -v docker >/dev/null 2>&1; then
+  curl -fsSL https://get.docker.com | sh
+fi
+docker --version
+docker compose version
+SETUP
+
+echo "→ cloning repo to $REMOTE_PATH..."
+ssh "$REMOTE_HOST" "test -d $REMOTE_PATH/.git || git clone $REPO_URL $REMOTE_PATH"
+
+echo "→ shipping config/master.key..."
+scp config/master.key "$REMOTE_HOST:$REMOTE_PATH/config/master.key"
+ssh "$REMOTE_HOST" "chmod 600 $REMOTE_PATH/config/master.key"
+
+echo "→ first build + start..."
+ssh "$REMOTE_HOST" "cd $REMOTE_PATH && docker compose up -d --build"
+
+echo "✓ server set up. Next: bin/deploy on subsequent changes."

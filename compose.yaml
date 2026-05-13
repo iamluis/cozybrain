@@ -1,0 +1,31 @@
+# Production compose for brain — runs on the Hetzner box.
+# Cloudflare in front handles SSL; this container speaks plain HTTP on 80.
+#
+# Single container. SQLite + Active Storage blobs both live under
+# /rails/storage and are persisted on a named volume so deploys never
+# nuke data.
+
+services:
+  app:
+    image: brain:latest
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      RAILS_ENV: production
+      SOLID_QUEUE_IN_PUMA: "true"
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+    volumes:
+      - brain_storage:/rails/storage
+      - ./config/master.key:/rails/config/master.key:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  brain_storage:
