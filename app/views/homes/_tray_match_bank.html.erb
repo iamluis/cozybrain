@@ -1,4 +1,5 @@
 <% txn = entry.money_side %>
+<% candidate = Ledger::Candidates.for_bank_transaction(txn, limit: 1).first %>
 <div class="tray__item tray__item--bank">
   <div class="tray__item-head">
     <span class="tray__item-title">
@@ -10,7 +11,36 @@
     </span>
   </div>
 
+  <% if candidate %>
+    <div class="tray__candidate">
+      <div class="tray__candidate-body">
+        <span class="tray__candidate-title">
+          <%= filing_title(candidate) %>
+        </span>
+        <span class="tray__candidate-meta num">
+          <%= I18n.l(candidate.received_at.to_date, format: "%-d %b") %>
+          ·
+          <%= display_money(BigDecimal(candidate.filable.amount_cents) / 100) %>
+        </span>
+      </div>
+      <%= button_to "Match",
+            ledger_matches_path,
+            method: :post,
+            params: { bank_transaction_id: txn.id, filing_id: candidate.id },
+            form: { class: "tray__pill-form" },
+            class: "tray__pill tray__pill--send" %>
+    </div>
+  <% end %>
+
   <div class="tray__actions">
-    <%= link_to "Match a receipt", new_ledger_match_path(bank_transaction_id: txn.id), class: "tray__pill tray__pill--accent" %>
+    <%= link_to (candidate ? "More candidates" : "Match a receipt"),
+          new_ledger_match_path(bank_transaction_id: txn.id),
+          class: "tray__pill" %>
+    <%= button_to "Dismiss",
+          ledger_dismissals_path,
+          method: :post,
+          params: { bank_transaction_id: txn.id },
+          form: { class: "tray__pill-form" },
+          class: "tray__pill tray__pill--quiet" %>
   </div>
 </div>

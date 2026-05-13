@@ -36,6 +36,17 @@ module LedgerHelper
     end
   end
 
+  # Human title for a Filing's filable — used by the match UI and the
+  # inline candidate row on the tray.
+  def filing_title(filing)
+    case filing.filable
+    when Receipt          then filing.filable.vendor.presence || "Receipt"
+    when ReceivedDocument then filing.filable.subject.presence || filing.filable.kind.humanize
+    when IssuedInvoice    then "#{filing.filable.display_client_name} · #{filing.filable.number}"
+    else filing.filable_type
+    end
+  end
+
   # Tiny label for the kind, used by stream rows + tray rows.
   def ledger_kind_label(entry)
     case entry.kind

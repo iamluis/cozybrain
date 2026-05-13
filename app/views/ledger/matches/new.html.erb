@@ -28,9 +28,7 @@
         <li class="match__row">
           <div class="match__row-body">
             <span class="match__row-title">
-              <%= filing.filable.try(:vendor).presence ||
-                  filing.filable.try(:subject).presence ||
-                  filing.filable_type %>
+              <%= filing_title(filing) %>
             </span>
             <span class="match__row-meta num">
               <%= I18n.l(filing.received_at.to_date, format: "%-d %b") %>
