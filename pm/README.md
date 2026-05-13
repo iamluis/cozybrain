@@ -39,10 +39,10 @@ Milestone files for `brain`. Read `brain.md` first; this folder is *how* we get 
 | 0010 | stream-tray-shell          | 🟢 done        |
 | 0011 | edit-everything-inline     | 🟢 done        |
 | 0012 | invoice-real-fields        | 🟢 done        |
-| 0013 | stabilize-ui               | 🟡 in progress |
-| 0014 | proof-ledger               | 🔴 next        |
-| 0015 | ledger-visual              | 🟡 in progress |
-| 0016 | weekly-pulse               | 🔴 not started |
+| 0013 | stabilize-ui               | 🟢 done        |
+| 0014 | proof-ledger               | 🟢 done        |
+| 0015 | ledger-visual              | 🟢 done        |
+| 0016 | weekly-pulse               | 🟡 next        |
 | 0017 | deployment-kamal           | 🔴 not started |
 | 0018 | folder-sync                | 🔴 not started |
 | 0019 | holded-adapter             | 🔴 not started |
