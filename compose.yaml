@@ -1,17 +1,16 @@
 # Production compose for brain — runs on the Hetzner box.
-# Cloudflare in front handles SSL; this container speaks plain HTTP on 80.
 #
-# Single container. SQLite + Active Storage blobs both live under
-# /rails/storage and are persisted on a named volume so deploys never
-# nuke data.
+# Caddy fronts the app on 80/443. Auto-issues + renews Let's Encrypt
+# certs (HTTP-01 challenge on port 80). The Rails container speaks plain
+# HTTP on 80 internally; only Caddy is exposed to the public ports.
 
 services:
   app:
     image: brain:latest
     build: .
     restart: unless-stopped
-    ports:
-      - "80:80"
+    expose:
+      - "80"             # internal only — Caddy reverse-proxies to it
     environment:
       RAILS_ENV: production
       SOLID_QUEUE_IN_PUMA: "true"
@@ -30,3 +29,20 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # ACME certs + account live here
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

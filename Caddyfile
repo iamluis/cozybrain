@@ -1,0 +1,13 @@
+# Caddy in front of the Rails app.
+# Auto-issues + renews Let's Encrypt certs on first start of a fresh
+# domain. Reload triggers re-evaluation; restart does not lose certs
+# because /data is a persistent compose volume.
+
+{
+    email hey@cozyedge.tech
+}
+
+brain.cozyedge.tech {
+    encode zstd gzip
+    reverse_proxy app:80
+}
