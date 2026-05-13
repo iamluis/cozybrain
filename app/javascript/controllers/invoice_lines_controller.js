@@ -16,6 +16,18 @@ export default class extends Controller {
   connect() {
     this._timer = null
     this.recomputeTotal()
+    this.#restoreScrollIfNeeded()
+  }
+
+  // After auto-save, Turbo navigates to the redirected URL and resets
+  // scroll to top by default. We stash window.scrollY before submit and
+  // restore it on the next connect() to preserve the user's position —
+  // critical on mobile where the form is taller than the viewport.
+  #restoreScrollIfNeeded() {
+    const saved = sessionStorage.getItem("brain.invoice.scrollY")
+    if (saved == null) return
+    sessionStorage.removeItem("brain.invoice.scrollY")
+    requestAnimationFrame(() => window.scrollTo(0, parseInt(saved, 10)))
   }
 
   addRow(event) {
@@ -90,6 +102,7 @@ export default class extends Controller {
   submit() {
     const form = this.element.closest("form")
     if (!form) return
+    sessionStorage.setItem("brain.invoice.scrollY", String(window.scrollY))
     form.requestSubmit()
   }
 

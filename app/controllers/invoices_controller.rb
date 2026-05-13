@@ -42,9 +42,12 @@ class InvoicesController < ApplicationController
 
     if @invoice.update(invoice_params)
       @invoice.recompute_total!
-      # No flash here — the Stimulus controller updates an in-header
-      # "Saved · HH:MM" pill via turbo:submit-end. Setting a flash on
-      # every auto-save submit would shift the layout on every keystroke.
+      # Redirect (not 204) is needed so that newly-added line items
+      # come back with their server-generated IDs — without that, the
+      # next auto-save creates duplicates. Scroll position is
+      # preserved client-side by invoice_lines_controller.js, which
+      # stashes window.scrollY in sessionStorage before submit and
+      # restores it on the next connect().
       redirect_to invoice_path(@invoice)
     else
       render :show, status: :unprocessable_content

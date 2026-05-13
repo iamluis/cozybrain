@@ -590,6 +590,48 @@ button { font: inherit; cursor: pointer; }
 .invoice__cell--amt { padding-right: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
 .invoice__cell--rm  { padding: 0; text-align: right; width: 2rem; }
 
+/* Mobile: stack each invoice line vertically — description full-width on
+   row 1; quantity / rate / amount / remove inline on row 2. The table
+   becomes a stack of grids, one per <tr>. */
+@media (max-width: 600px) {
+  .invoice__lines        { display: block; }
+  .invoice__lines colgroup,
+  .invoice__lines thead  { display: none; }
+  .invoice__lines tbody  { display: block; }
+  .invoice__lines tr.invoice__line {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto 1.75rem;
+    grid-template-areas:
+      "desc desc desc desc"
+      "qty  rate amt  rm";
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .invoice__cell { display: block; padding: 0; }
+  .invoice__cell--desc { grid-area: desc; }
+  .invoice__cell--qty  { grid-area: qty; }
+  .invoice__cell--rate { grid-area: rate; }
+  .invoice__cell--amt  { grid-area: amt; min-width: 0; }
+  .invoice__cell--rm   { grid-area: rm; }
+
+  /* Small caps mono labels above each numeric cell on mobile, pulled
+     from the data-mobile-label attribute. */
+  .invoice__cell--qty::before,
+  .invoice__cell--rate::before {
+    content: attr(data-mobile-label);
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+}
+
 /* Inputs are writable patches on the paper — paper-deep at rest, white
    only on focus when the user is actively typing. Subtle bottom rule
    for affordance. */

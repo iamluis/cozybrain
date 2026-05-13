@@ -1,5 +1,5 @@
 <tr class="invoice__line">
-  <td class="invoice__cell invoice__cell--desc">
+  <td class="invoice__cell invoice__cell--desc" data-mobile-label="Description">
     <%= lf.hidden_field :id %>
     <%= lf.hidden_field :position %>
     <%= lf.hidden_field :_destroy, value: "0" %>
@@ -8,7 +8,7 @@
           placeholder: "What was the work?",
           data: { action: "input->invoice-lines#fieldChanged" } %>
   </td>
-  <td class="invoice__cell invoice__cell--num">
+  <td class="invoice__cell invoice__cell--num invoice__cell--qty" data-mobile-label="Qty">
     <%= lf.text_field :quantity,
           value: format_quantity(line.quantity),
           inputmode: "decimal",
@@ -17,7 +17,7 @@
           placeholder: "0",
           data: { action: "input->invoice-lines#fieldChanged" } %>
   </td>
-  <td class="invoice__cell invoice__cell--num">
+  <td class="invoice__cell invoice__cell--num invoice__cell--rate" data-mobile-label="Rate (€)">
     <%= lf.text_field :unit_amount,
           value: format_money(line.unit_amount),
           inputmode: "decimal",
@@ -26,7 +26,7 @@
           placeholder: "0.00",
           data: { action: "input->invoice-lines#fieldChanged" } %>
   </td>
-  <td class="invoice__cell invoice__cell--amt invoice__line-amount">
+  <td class="invoice__cell invoice__cell--amt invoice__line-amount" data-mobile-label="Amount">
     <%= display_money(line.quantity.to_f * line.unit_amount.to_f) %>
   </td>
   <td class="invoice__cell invoice__cell--rm">
